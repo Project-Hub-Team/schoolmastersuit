@@ -70,7 +70,7 @@ const Register = () => {
       <div 
         className="hidden lg:block lg:w-1/2 bg-cover bg-center relative"
         style={{
-          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('https://images.unsplash.com/photo-1427504494785-3a9ca7044f45?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80')`
+          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('/bg.jpeg')`
         }}
       >
         <div className="absolute inset-0 flex flex-col justify-center items-center text-white p-12">
