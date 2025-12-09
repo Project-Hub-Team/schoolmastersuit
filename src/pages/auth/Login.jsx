@@ -45,29 +45,16 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex">
-      {/* Left Side - Image Background */}
-      <div 
-        className="hidden lg:block lg:w-1/2 bg-cover bg-center relative"
-        style={{
-          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('/bg.jpeg')`
-        }}
-      >
-        <div className="absolute inset-0 flex flex-col justify-center items-center text-white p-12">
-          <div className="inline-flex items-center justify-center w-24 h-24 bg-white/20 backdrop-blur-sm rounded-full mb-6">
-            <MdSchool size={60} className="text-white" />
-          </div>
-          <h2 className="text-4xl font-bold mb-4">Welcome Back!</h2>
-          <p className="text-xl text-center max-w-md">
-            Empowering Education in Ghana - Managing Tomorrow's Leaders Today
-          </p>
-        </div>
-      </div>
-
-      {/* Right Side - Login Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-white">
-        <div className="max-w-md w-full">{/* Logo & Title - Mobile Only */}
-        <div className="text-center mb-8 lg:hidden">
+    <div 
+      className="min-h-screen bg-cover bg-center relative flex items-center justify-center p-4"
+      style={{
+        backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/bg.jpeg')`
+      }}
+    >
+      {/* Login Form Card */}
+      <div className="max-w-md w-full bg-white rounded-2xl shadow-2xl p-8">
+        {/* Logo & Title */}
+        <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-20 h-20 bg-primary-600 rounded-full mb-4">
             <MdSchool size={40} className="text-white" />
           </div>
@@ -75,14 +62,6 @@ const Login = () => {
             Ghana School Management
           </h1>
           <p className="text-gray-600">Sign in to your account</p>
-        </div>
-
-        {/* Desktop Title */}
-        <div className="hidden lg:block text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">
-            Sign In
-          </h1>
-          <p className="text-gray-600">Enter your credentials to continue</p>
         </div>
 
         {/* Login Form */}
@@ -179,7 +158,6 @@ const Login = () => {
         <p className="text-center text-sm text-gray-600 mt-6">
           © 2025 Ghana School Management System. All rights reserved.
         </p>
-        </div>
       </div>
     </div>
   );
