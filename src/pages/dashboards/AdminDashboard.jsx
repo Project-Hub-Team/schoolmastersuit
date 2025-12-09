@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import DashboardLayout from '../../components/DashboardLayout';
-import { Users, GraduationCap, DollarSign, TrendingUp } from 'lucide-react';
+import { MdPeople, MdSchool, MdAttachMoney, MdTrendingUp } from 'react-icons/md';
 import { getAllStudents, getAllTeachers } from '../../utils/database';
 import LoadingSpinner from '../../components/LoadingSpinner';
 
@@ -60,7 +60,7 @@ const AdminDashboard = () => {
                 <p className="text-3xl font-bold text-gray-800">{stats.totalStudents}</p>
               </div>
               <div className="bg-blue-500 w-12 h-12 rounded-lg flex items-center justify-center">
-                <Users className="text-white" size={24} />
+                <MdPeople className="text-white" size={24} />
               </div>
             </div>
           </div>
@@ -72,7 +72,7 @@ const AdminDashboard = () => {
                 <p className="text-3xl font-bold text-gray-800">{stats.totalTeachers}</p>
               </div>
               <div className="bg-green-500 w-12 h-12 rounded-lg flex items-center justify-center">
-                <GraduationCap className="text-white" size={24} />
+                <MdSchool className="text-white" size={24} />
               </div>
             </div>
           </div>
@@ -84,7 +84,7 @@ const AdminDashboard = () => {
                 <p className="text-3xl font-bold text-gray-800">GH₵ {stats.pendingFees}</p>
               </div>
               <div className="bg-orange-500 w-12 h-12 rounded-lg flex items-center justify-center">
-                <DollarSign className="text-white" size={24} />
+                <MdAttachMoney className="text-white" size={24} />
               </div>
             </div>
           </div>
@@ -96,7 +96,7 @@ const AdminDashboard = () => {
                 <p className="text-3xl font-bold text-gray-800">{stats.activeClasses}</p>
               </div>
               <div className="bg-purple-500 w-12 h-12 rounded-lg flex items-center justify-center">
-                <TrendingUp className="text-white" size={24} />
+                <MdTrendingUp className="text-white" size={24} />
               </div>
             </div>
           </div>

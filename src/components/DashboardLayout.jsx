@@ -4,20 +4,20 @@ import { useAuth } from '../contexts/AuthContext';
 import { useSelector } from 'react-redux';
 import { selectSettings } from '../store/slices/systemSlice';
 import {
-  LayoutDashboard,
-  Users,
-  GraduationCap,
-  BookOpen,
-  DollarSign,
-  Settings,
-  LogOut,
-  Menu,
-  X,
-  FileText,
-  UserCheck,
-  BarChart3,
-  Shield
-} from 'lucide-react';
+  MdDashboard,
+  MdPeople,
+  MdSchool,
+  MdMenuBook,
+  MdAttachMoney,
+  MdSettings,
+  MdLogout,
+  MdMenu,
+  MdClose,
+  MdDescription,
+  MdPersonAdd,
+  MdBarChart,
+  MdSecurity
+} from 'react-icons/md';
 import { USER_ROLES } from '../constants/ghanaEducation';
 import toast from 'react-hot-toast';
 
@@ -46,45 +46,45 @@ const DashboardLayout = ({ children, title }) => {
 
     if (role === USER_ROLES.SUPER_ADMIN) {
       return [
-        { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
-        { name: 'System Settings', path: '/super-admin/settings', icon: Settings },
-        { name: 'Manage Admins', path: '/super-admin/admins', icon: Shield },
-        { name: 'Vouchers', path: '/super-admin/vouchers', icon: FileText },
-        { name: 'Students', path: '/admin/students', icon: Users },
-        { name: 'Teachers', path: '/admin/teachers', icon: GraduationCap },
-        { name: 'Classes', path: '/admin/classes', icon: BookOpen },
-        { name: 'Reports', path: '/admin/reports', icon: BarChart3 }
+        { name: 'Dashboard', path: '/dashboard', icon: MdDashboard },
+        { name: 'System Settings', path: '/super-admin/settings', icon: MdSettings },
+        { name: 'Manage Admins', path: '/super-admin/admins', icon: MdSecurity },
+        { name: 'Vouchers', path: '/super-admin/vouchers', icon: MdDescription },
+        { name: 'Students', path: '/admin/students', icon: MdPeople },
+        { name: 'Teachers', path: '/admin/teachers', icon: MdSchool },
+        { name: 'Classes', path: '/admin/classes', icon: MdMenuBook },
+        { name: 'Reports', path: '/admin/reports', icon: MdBarChart }
       ];
     }
 
     if (role === USER_ROLES.ADMIN) {
       return [
-        { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
-        { name: 'Students', path: '/admin/students', icon: Users },
-        { name: 'Teachers', path: '/admin/teachers', icon: GraduationCap },
-        { name: 'Classes', path: '/admin/classes', icon: BookOpen },
-        { name: 'Fees', path: '/admin/fees', icon: DollarSign },
-        { name: 'Reports', path: '/admin/reports', icon: BarChart3 }
+        { name: 'Dashboard', path: '/dashboard', icon: MdDashboard },
+        { name: 'Students', path: '/admin/students', icon: MdPeople },
+        { name: 'Teachers', path: '/admin/teachers', icon: MdSchool },
+        { name: 'Classes', path: '/admin/classes', icon: MdMenuBook },
+        { name: 'Fees', path: '/admin/fees', icon: MdAttachMoney },
+        { name: 'Reports', path: '/admin/reports', icon: MdBarChart }
       ];
     }
 
     if (role === USER_ROLES.TEACHER) {
       return [
-        { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
-        { name: 'My Classes', path: '/teacher/my-classes', icon: BookOpen },
-        { name: 'Attendance', path: '/teacher/attendance', icon: UserCheck },
-        { name: 'Grade Entry', path: '/teacher/grades', icon: FileText },
-        { name: 'Lesson Notes', path: '/teacher/lesson-notes', icon: BookOpen }
+        { name: 'Dashboard', path: '/dashboard', icon: MdDashboard },
+        { name: 'My Classes', path: '/teacher/my-classes', icon: MdMenuBook },
+        { name: 'Attendance', path: '/teacher/attendance', icon: MdPersonAdd },
+        { name: 'Grade Entry', path: '/teacher/grades', icon: MdDescription },
+        { name: 'Lesson Notes', path: '/teacher/lesson-notes', icon: MdMenuBook }
       ];
     }
 
     if (role === USER_ROLES.STUDENT) {
       return [
-        { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
-        { name: 'My Results', path: '/student/results', icon: BarChart3 },
-        { name: 'My Fees', path: '/student/fees', icon: DollarSign },
-        { name: 'Lesson Notes', path: '/student/lesson-notes', icon: BookOpen },
-        { name: 'My Attendance', path: '/student/attendance', icon: UserCheck }
+        { name: 'Dashboard', path: '/dashboard', icon: MdDashboard },
+        { name: 'My Results', path: '/student/results', icon: MdBarChart },
+        { name: 'My Fees', path: '/student/fees', icon: MdAttachMoney },
+        { name: 'Lesson Notes', path: '/student/lesson-notes', icon: MdMenuBook },
+        { name: 'My Attendance', path: '/student/attendance', icon: MdPersonAdd }
       ];
     }
 
@@ -123,7 +123,7 @@ const DashboardLayout = ({ children, title }) => {
             onClick={() => setSidebarOpen(false)}
             className="lg:hidden text-gray-500 hover:text-gray-700"
           >
-            <X size={24} />
+            <MdClose size={24} />
           </button>
         </div>
 
@@ -170,7 +170,7 @@ const DashboardLayout = ({ children, title }) => {
             onClick={handleLogout}
             className="w-full flex items-center justify-center px-4 py-2 bg-red-50 text-red-700 rounded-lg hover:bg-red-100 transition-colors"
           >
-            <LogOut size={18} className="mr-2" />
+            <MdLogout size={18} className="mr-2" />
             <span className="font-medium">Logout</span>
           </button>
         </div>
@@ -185,7 +185,7 @@ const DashboardLayout = ({ children, title }) => {
               onClick={() => setSidebarOpen(true)}
               className="lg:hidden text-gray-500 hover:text-gray-700 mr-4"
             >
-              <Menu size={24} />
+              <MdMenu size={24} />
             </button>
             <h1 className="text-xl font-semibold text-gray-800">{title}</h1>
           </div>

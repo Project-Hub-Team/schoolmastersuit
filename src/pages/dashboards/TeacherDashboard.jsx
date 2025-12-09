@@ -1,6 +1,6 @@
 import React from 'react';
 import DashboardLayout from '../../components/DashboardLayout';
-import { BookOpen, UserCheck, FileText, Users } from 'lucide-react';
+import { MdMenuBook, MdPersonAdd, MdDescription, MdPeople } from 'react-icons/md';
 
 const TeacherDashboard = () => {
   return (
@@ -19,7 +19,7 @@ const TeacherDashboard = () => {
                 <p className="text-3xl font-bold text-gray-800">3</p>
               </div>
               <div className="bg-blue-500 w-12 h-12 rounded-lg flex items-center justify-center">
-                <BookOpen className="text-white" size={24} />
+                <MdMenuBook className="text-white" size={24} />
               </div>
             </div>
           </div>
@@ -31,7 +31,7 @@ const TeacherDashboard = () => {
                 <p className="text-3xl font-bold text-gray-800">85</p>
               </div>
               <div className="bg-green-500 w-12 h-12 rounded-lg flex items-center justify-center">
-                <Users className="text-white" size={24} />
+                <MdPeople className="text-white" size={24} />
               </div>
             </div>
           </div>
@@ -43,7 +43,7 @@ const TeacherDashboard = () => {
                 <p className="text-3xl font-bold text-gray-800">12</p>
               </div>
               <div className="bg-orange-500 w-12 h-12 rounded-lg flex items-center justify-center">
-                <FileText className="text-white" size={24} />
+                <MdDescription className="text-white" size={24} />
               </div>
             </div>
           </div>
@@ -55,7 +55,7 @@ const TeacherDashboard = () => {
                 <p className="text-3xl font-bold text-gray-800">94%</p>
               </div>
               <div className="bg-purple-500 w-12 h-12 rounded-lg flex items-center justify-center">
-                <UserCheck className="text-white" size={24} />
+                <MdPersonAdd className="text-white" size={24} />
               </div>
             </div>
           </div>

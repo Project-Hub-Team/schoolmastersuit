@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { GraduationCap, ArrowLeft, Upload, Eye, EyeOff } from 'lucide-react';
+import { MdSchool, MdArrowBack, MdCloudUpload, MdVisibility, MdVisibilityOff } from 'react-icons/md';
 import { CLASSES, GENDER, USER_ROLES } from '../../constants/ghanaEducation';
 import { getVoucher, markVoucherAsUsed } from '../../utils/database';
 import { uploadStudentPhoto, uploadStudentDocument } from '../../utils/storage';
@@ -187,14 +187,14 @@ const VoucherRegistration = () => {
           to="/login"
           className="inline-flex items-center text-primary-700 hover:text-primary-800 mb-6"
         >
-          <ArrowLeft size={20} className="mr-2" />
+          <MdArrowBack size={20} className="mr-2" />
           Back to Login
         </Link>
 
         {/* Logo & Title */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-20 h-20 bg-primary-600 rounded-full mb-4">
-            <GraduationCap size={40} className="text-white" />
+            <MdSchool size={40} className="text-white" />
           </div>
           <h1 className="text-3xl font-bold text-gray-800 mb-2">
             Student Registration
@@ -477,7 +477,7 @@ const VoucherRegistration = () => {
                         onClick={() => setShowPassword(!showPassword)}
                         className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500"
                       >
-                        {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                        {showPassword ? <MdVisibilityOff size={20} /> : <MdVisibility size={20} />}
                       </button>
                     </div>
                   </div>
@@ -516,7 +516,7 @@ const VoucherRegistration = () => {
                         required
                       />
                       <label htmlFor="photo" className="cursor-pointer">
-                        <Upload className="mx-auto text-gray-400 mb-2" size={32} />
+                        <MdCloudUpload className="mx-auto text-gray-400 mb-2" size={32} />
                         <p className="text-sm text-gray-600">
                           {files.photo ? files.photo.name : 'Click to upload'}
                         </p>
@@ -538,7 +538,7 @@ const VoucherRegistration = () => {
                         id="birthCertificate"
                       />
                       <label htmlFor="birthCertificate" className="cursor-pointer">
-                        <Upload className="mx-auto text-gray-400 mb-2" size={32} />
+                        <MdCloudUpload className="mx-auto text-gray-400 mb-2" size={32} />
                         <p className="text-sm text-gray-600">
                           {files.birthCertificate ? files.birthCertificate.name : 'Click to upload'}
                         </p>

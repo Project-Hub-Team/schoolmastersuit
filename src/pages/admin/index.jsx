@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import DashboardLayout from '../../components/DashboardLayout';
-import { Plus, Search, Edit, Trash2, Download, Upload, Eye, UserPlus, DollarSign, Users, GraduationCap, UserCheck, BookOpen, TrendingUp } from 'lucide-react';
+import { MdAdd, MdSearch, MdEdit, MdDelete, MdDownload, MdCloudUpload, MdVisibility, MdPersonAdd, MdAttachMoney, MdPeople, MdSchool, MdPersonAdd as MdUserCheck, MdMenuBook, MdTrendingUp } from 'react-icons/md';
 import { getAllStudents, createStudent, updateStudent, deleteStudent, getAllTeachers, readAllRecords } from '../../utils/database';
 import { CLASSES, getSubjectsByClass } from '../../constants/ghanaEducation';
 import LoadingSpinner from '../../components/LoadingSpinner';
@@ -81,11 +81,11 @@ export const Students = () => {
           </div>
           <div className="flex gap-2">
             <button className="btn btn-secondary flex items-center gap-2">
-              <Download size={18} />
+              <MdDownload size={18} />
               Export
             </button>
             <button onClick={handleAddStudent} className="btn btn-primary flex items-center gap-2">
-              <Plus size={18} />
+              <MdAdd size={18} />
               Add Student
             </button>
           </div>
@@ -95,7 +95,7 @@ export const Students = () => {
         <div className="card">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+              <MdSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
               <input
                 type="text"
                 placeholder="Search by name or ID..."
@@ -135,7 +135,7 @@ export const Students = () => {
                 {filteredStudents.length === 0 ? (
                   <tr>
                     <td colSpan="6" className="px-6 py-12 text-center text-gray-500">
-                      <UserPlus className="mx-auto mb-3 text-gray-400" size={48} />
+                      <MdPersonAdd className="mx-auto mb-3 text-gray-400" size={48} />
                       <p className="text-lg font-medium">No students found</p>
                       <p className="text-sm">Add your first student to get started</p>
                     </td>
@@ -168,10 +168,10 @@ export const Students = () => {
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         <div className="flex gap-2">
                           <button onClick={() => handleEditStudent(student)} className="text-blue-600 hover:text-blue-900">
-                            <Edit size={18} />
+                            <MdEdit size={18} />
                           </button>
                           <button onClick={() => handleDeleteStudent(student.id)} className="text-red-600 hover:text-red-900">
-                            <Trash2 size={18} />
+                            <MdDelete size={18} />
                           </button>
                         </div>
                       </td>
@@ -275,14 +275,14 @@ export const Teachers = () => {
             <p className="text-gray-600">Manage teacher records and assignments</p>
           </div>
           <button onClick={() => setShowAddModal(true)} className="btn btn-primary flex items-center gap-2">
-            <Plus size={18} />
+            <MdAdd size={18} />
             Add Teacher
           </button>
         </div>
 
         <div className="card">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+            <MdSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
             <input
               type="text"
               placeholder="Search teachers..."
@@ -296,7 +296,7 @@ export const Teachers = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredTeachers.length === 0 ? (
             <div className="col-span-full text-center py-12 card">
-              <UserPlus className="mx-auto mb-3 text-gray-400" size={48} />
+              <MdPersonAdd className="mx-auto mb-3 text-gray-400" size={48} />
               <p className="text-lg font-medium text-gray-700">No teachers found</p>
               <p className="text-sm text-gray-500">Add your first teacher to get started</p>
             </div>
@@ -324,11 +324,11 @@ export const Teachers = () => {
                 </p>
                 <div className="mt-4 flex gap-2">
                   <button className="btn btn-secondary flex-1 text-sm">
-                    <Eye size={16} className="inline mr-1" />
+                    <MdVisibility size={16} className="inline mr-1" />
                     View
                   </button>
                   <button className="btn btn-primary flex-1 text-sm">
-                    <Edit size={16} className="inline mr-1" />
+                    <MdEdit size={16} className="inline mr-1" />
                     Edit
                   </button>
                 </div>
@@ -412,7 +412,7 @@ export const Classes = () => {
             <p className="text-gray-600">Manage class assignments and schedules</p>
           </div>
           <button className="btn btn-primary flex items-center gap-2">
-            <Plus size={18} />
+            <MdAdd size={18} />
             Create Class
           </button>
         </div>
@@ -447,11 +447,11 @@ export const Classes = () => {
 
                 <div className="flex gap-2">
                   <button className="btn btn-secondary flex-1 text-sm">
-                    <Eye size={16} className="inline mr-1" />
+                    <MdVisibility size={16} className="inline mr-1" />
                     View
                   </button>
                   <button className="btn btn-primary flex-1 text-sm">
-                    <Edit size={16} className="inline mr-1" />
+                    <MdEdit size={16} className="inline mr-1" />
                     Manage
                   </button>
                 </div>
@@ -507,7 +507,7 @@ export const Fees = () => {
             <p className="text-gray-600">Track fees, payments, and outstanding balances</p>
           </div>
           <button className="btn btn-primary flex items-center gap-2">
-            <Plus size={18} />
+            <MdAdd size={18} />
             Record Payment
           </button>
         </div>
@@ -549,7 +549,7 @@ export const Fees = () => {
 
           {fees.length === 0 ? (
             <div className="text-center py-12">
-              <DollarSign className="mx-auto mb-3 text-gray-400" size={48} />
+              <MdAttachMoney className="mx-auto mb-3 text-gray-400" size={48} />
               <p className="text-lg font-medium text-gray-700">No fee records found</p>
               <p className="text-sm text-gray-500">Fee records will appear here once payments are recorded</p>
             </div>
@@ -618,7 +618,7 @@ export const Reports = () => {
           <div className="card hover:shadow-lg transition-shadow cursor-pointer" onClick={() => setReportType('students')}>
             <div className="flex items-start justify-between mb-4">
               <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                <Users className="text-blue-600" size={24} />
+                <MdPeople className="text-blue-600" size={24} />
               </div>
             </div>
             <h3 className="font-bold text-lg mb-2">Student Reports</h3>
@@ -629,7 +629,7 @@ export const Reports = () => {
           <div className="card hover:shadow-lg transition-shadow cursor-pointer" onClick={() => setReportType('academic')}>
             <div className="flex items-start justify-between mb-4">
               <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                <GraduationCap className="text-green-600" size={24} />
+                <MdSchool className="text-green-600" size={24} />
               </div>
             </div>
             <h3 className="font-bold text-lg mb-2">Academic Reports</h3>
@@ -640,7 +640,7 @@ export const Reports = () => {
           <div className="card hover:shadow-lg transition-shadow cursor-pointer" onClick={() => setReportType('attendance')}>
             <div className="flex items-start justify-between mb-4">
               <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                <UserCheck className="text-purple-600" size={24} />
+                <MdUserCheck className="text-purple-600" size={24} />
               </div>
             </div>
             <h3 className="font-bold text-lg mb-2">Attendance Reports</h3>
@@ -651,7 +651,7 @@ export const Reports = () => {
           <div className="card hover:shadow-lg transition-shadow cursor-pointer" onClick={() => setReportType('financial')}>
             <div className="flex items-start justify-between mb-4">
               <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
-                <DollarSign className="text-yellow-600" size={24} />
+                <MdAttachMoney className="text-yellow-600" size={24} />
               </div>
             </div>
             <h3 className="font-bold text-lg mb-2">Financial Reports</h3>
@@ -662,7 +662,7 @@ export const Reports = () => {
           <div className="card hover:shadow-lg transition-shadow cursor-pointer" onClick={() => setReportType('teacher')}>
             <div className="flex items-start justify-between mb-4">
               <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
-                <BookOpen className="text-red-600" size={24} />
+                <MdMenuBook className="text-red-600" size={24} />
               </div>
             </div>
             <h3 className="font-bold text-lg mb-2">Teacher Reports</h3>
@@ -673,7 +673,7 @@ export const Reports = () => {
           <div className="card hover:shadow-lg transition-shadow cursor-pointer" onClick={() => setReportType('custom')}>
             <div className="flex items-start justify-between mb-4">
               <div className="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center">
-                <TrendingUp className="text-indigo-600" size={24} />
+                <MdTrendingUp className="text-indigo-600" size={24} />
               </div>
             </div>
             <h3 className="font-bold text-lg mb-2">Custom Reports</h3>
@@ -686,15 +686,15 @@ export const Reports = () => {
           <h3 className="text-lg font-bold mb-4">Quick Export</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <button className="btn btn-primary flex items-center justify-center gap-2">
-              <Download size={18} />
+              <MdDownload size={18} />
               Export to PDF
             </button>
             <button className="btn btn-primary flex items-center justify-center gap-2">
-              <Download size={18} />
+              <MdDownload size={18} />
               Export to Excel
             </button>
             <button className="btn btn-primary flex items-center justify-center gap-2">
-              <Download size={18} />
+              <MdDownload size={18} />
               Export to CSV
             </button>
           </div>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import DashboardLayout from '../../components/DashboardLayout';
 import { useAuth } from '../../contexts/AuthContext';
-import { Users, GraduationCap, BookOpen, DollarSign, TrendingUp, UserCheck, Settings, Shield, Ticket } from 'lucide-react';
+import { MdPeople, MdSchool, MdMenuBook, MdAttachMoney, MdTrendingUp, MdPersonAdd, MdSettings, MdSecurity, MdConfirmationNumber } from 'react-icons/md';
 import { getAllStudents, getAllTeachers, readAllRecords } from '../../utils/database';
 import LoadingSpinner from '../../components/LoadingSpinner';
 
@@ -122,7 +122,7 @@ const SuperAdminDashboard = () => {
           <h3 className="card-header">Quick Actions</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <button className="p-4 border-2 border-gray-200 rounded-lg hover:border-primary-500 hover:bg-primary-50 transition-colors text-left">
-              <Settings className="text-primary-600 mb-2" size={24} />
+              <MdSettings className="text-primary-600 mb-2" size={24} />
               <h4 className="font-semibold text-gray-800">System Settings</h4>
               <p className="text-sm text-gray-600 mt-1">Configure school details and preferences</p>
             </button>
@@ -134,7 +134,7 @@ const SuperAdminDashboard = () => {
             </button>
             
             <button className="p-4 border-2 border-gray-200 rounded-lg hover:border-primary-500 hover:bg-primary-50 transition-colors text-left">
-              <BookOpen className="text-primary-600 mb-2" size={24} />
+              <MdMenuBook className="text-primary-600 mb-2" size={24} />
               <h4 className="font-semibold text-gray-800">Generate Vouchers</h4>
               <p className="text-sm text-gray-600 mt-1">Create new student registration vouchers</p>
             </button>
@@ -149,7 +149,7 @@ const SuperAdminDashboard = () => {
               <div className="flex items-center justify-between py-2 border-b">
                 <div className="flex items-center">
                   <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-3">
-                    <UserCheck className="text-green-600" size={16} />
+                    <MdPersonAdd className="text-green-600" size={16} />
                   </div>
                   <div>
                     <p className="text-sm font-medium text-gray-800">New student registered</p>
@@ -160,7 +160,7 @@ const SuperAdminDashboard = () => {
               <div className="flex items-center justify-between py-2 border-b">
                 <div className="flex items-center">
                   <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mr-3">
-                    <GraduationCap className="text-blue-600" size={16} />
+                    <MdSchool className="text-blue-600" size={16} />
                   </div>
                   <div>
                     <p className="text-sm font-medium text-gray-800">New teacher added</p>
@@ -171,7 +171,7 @@ const SuperAdminDashboard = () => {
               <div className="flex items-center justify-between py-2">
                 <div className="flex items-center">
                   <div className="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center mr-3">
-                    <Settings className="text-purple-600" size={16} />
+                    <MdSettings className="text-purple-600" size={16} />
                   </div>
                   <div>
                     <p className="text-sm font-medium text-gray-800">System settings updated</p>

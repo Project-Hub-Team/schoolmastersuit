@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { GraduationCap, Eye, EyeOff } from 'lucide-react';
+import { MdSchool, MdVisibility, MdVisibilityOff } from 'react-icons/md';
 import toast from 'react-hot-toast';
 
 /**
@@ -50,7 +50,7 @@ const Login = () => {
         {/* Logo & Title */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-20 h-20 bg-primary-600 rounded-full mb-4">
-            <GraduationCap size={40} className="text-white" />
+            <MdSchool size={40} className="text-white" />
           </div>
           <h1 className="text-3xl font-bold text-gray-800 mb-2">
             Ghana School Management
@@ -99,7 +99,7 @@ const Login = () => {
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
                 >
-                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  {showPassword ? <MdVisibilityOff size={20} /> : <MdVisibility size={20} />}
                 </button>
               </div>
             </div>

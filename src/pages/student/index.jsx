@@ -1,7 +1,7 @@
 // Student pages - Full implementations
 import React, { useState, useEffect } from 'react';
 import DashboardLayout from '../../components/DashboardLayout';
-import { Download, Calendar, DollarSign, BookOpen, TrendingUp, Award, FileText } from 'lucide-react';
+import { MdDownload, MdCalendarToday, MdAttachMoney, MdMenuBook, MdTrendingUp, MdEmojiEvents, MdDescription } from 'react-icons/md';
 import { useAuth } from '../../contexts/AuthContext';
 import { readAllRecords } from '../../utils/database';
 import { GRADING_SCALE, CLASSES } from '../../constants/ghanaEducation';
@@ -59,7 +59,7 @@ export const MyResults = () => {
             <p className="text-gray-600">View your examination results and performance</p>
           </div>
           <button className="btn btn-primary flex items-center gap-2">
-            <Download size={18} />
+            <MdDownload size={18} />
             Download Report Card
           </button>
         </div>
@@ -101,7 +101,7 @@ export const MyResults = () => {
 
           {results.length === 0 ? (
             <div className="text-center py-12">
-              <Award className="mx-auto mb-3 text-gray-400" size={48} />
+              <MdEmojiEvents className="mx-auto mb-3 text-gray-400" size={48} />
               <p className="text-lg font-medium text-gray-700">No results available</p>
               <p className="text-sm text-gray-500">Your results will appear here once published</p>
             </div>
@@ -152,7 +152,7 @@ export const MyResults = () => {
           <div className="card bg-green-50">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                <TrendingUp className="text-green-600" size={24} />
+                <MdTrendingUp className="text-green-600" size={24} />
               </div>
               <div>
                 <p className="text-sm text-green-700">Excellent</p>
@@ -165,7 +165,7 @@ export const MyResults = () => {
           <div className="card bg-yellow-50">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
-                <Award className="text-yellow-600" size={24} />
+                <MdEmojiEvents className="text-yellow-600" size={24} />
               </div>
               <div>
                 <p className="text-sm text-yellow-700">Average</p>
@@ -178,7 +178,7 @@ export const MyResults = () => {
           <div className="card bg-red-50">
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
-                <FileText className="text-red-600" size={24} />
+                <MdDescription className="text-red-600" size={24} />
               </div>
               <div>
                 <p className="text-sm text-red-700">Need Improvement</p>
@@ -265,7 +265,7 @@ export const MyFees = () => {
           {balance > 0 ? (
             <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-4">
               <div className="flex items-start gap-3">
-                <DollarSign className="text-yellow-600 mt-1" size={24} />
+                <MdAttachMoney className="text-yellow-600 mt-1" size={24} />
                 <div>
                   <h4 className="font-bold text-yellow-800 mb-1">Outstanding Balance</h4>
                   <p className="text-sm text-yellow-700">
@@ -278,7 +278,7 @@ export const MyFees = () => {
           ) : (
             <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-4">
               <div className="flex items-start gap-3">
-                <Award className="text-green-600 mt-1" size={24} />
+                <MdEmojiEvents className="text-green-600 mt-1" size={24} />
                 <div>
                   <h4 className="font-bold text-green-800 mb-1">Fees Fully Paid</h4>
                   <p className="text-sm text-green-700">
@@ -293,7 +293,7 @@ export const MyFees = () => {
           
           {payments.length === 0 ? (
             <div className="text-center py-12">
-              <DollarSign className="mx-auto mb-3 text-gray-400" size={48} />
+              <MdAttachMoney className="mx-auto mb-3 text-gray-400" size={48} />
               <p className="text-lg font-medium text-gray-700">No payments recorded</p>
               <p className="text-sm text-gray-500">Your payment history will appear here</p>
             </div>
@@ -379,7 +379,7 @@ export const MyLessonNotes = () => {
 
         {notes.length === 0 ? (
           <div className="card text-center py-12">
-            <BookOpen className="mx-auto mb-3 text-gray-400" size={48} />
+            <MdMenuBook className="mx-auto mb-3 text-gray-400" size={48} />
             <p className="text-lg font-medium text-gray-700">No lesson notes available</p>
             <p className="text-sm text-gray-500">Lesson notes will appear here when uploaded by teachers</p>
           </div>
@@ -389,7 +389,7 @@ export const MyLessonNotes = () => {
               <div key={note.id} className="card hover:shadow-lg transition-shadow">
                 <div className="flex items-start justify-between mb-3">
                   <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center">
-                    <BookOpen className="text-primary-600" size={24} />
+                    <MdMenuBook className="text-primary-600" size={24} />
                   </div>
                   <span className="text-xs text-gray-500">
                     {new Date(note.createdAt).toLocaleDateString()}
@@ -399,7 +399,7 @@ export const MyLessonNotes = () => {
                 <p className="text-sm text-gray-600 mb-2">{note.subject}</p>
                 <p className="text-sm text-gray-500 mb-4">By: {note.teacherName}</p>
                 <button className="btn btn-primary w-full flex items-center justify-center gap-2">
-                  <Download size={18} />
+                  <MdDownload size={18} />
                   Download
                 </button>
               </div>
@@ -483,7 +483,7 @@ export const MyAttendance = () => {
         {attendanceRate < 80 && (
           <div className="card bg-orange-50 border border-orange-200">
             <div className="flex items-start gap-3">
-              <Calendar className="text-orange-600 mt-1" size={24} />
+              <MdCalendarToday className="text-orange-600 mt-1" size={24} />
               <div>
                 <h4 className="font-bold text-orange-800 mb-1">Attendance Warning</h4>
                 <p className="text-sm text-orange-700">
@@ -499,7 +499,7 @@ export const MyAttendance = () => {
 
           {attendance.length === 0 ? (
             <div className="text-center py-12">
-              <Calendar className="mx-auto mb-3 text-gray-400" size={48} />
+              <MdCalendarToday className="mx-auto mb-3 text-gray-400" size={48} />
               <p className="text-lg font-medium text-gray-700">No attendance records</p>
               <p className="text-sm text-gray-500">Your attendance will be recorded here</p>
             </div>
@@ -547,3 +547,4 @@ export const MyAttendance = () => {
     </DashboardLayout>
   );
 };
+

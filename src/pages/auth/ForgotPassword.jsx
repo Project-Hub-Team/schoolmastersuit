@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
-import { GraduationCap, ArrowLeft, Mail } from 'lucide-react';
+import { MdSchool, MdArrowBack, MdEmail } from 'react-icons/md';
 import toast from 'react-hot-toast';
 
 /**
@@ -41,14 +41,14 @@ const ForgotPassword = () => {
           to="/login"
           className="inline-flex items-center text-primary-700 hover:text-primary-800 mb-6"
         >
-          <ArrowLeft size={20} className="mr-2" />
+          <MdArrowBack size={20} className="mr-2" />
           Back to Login
         </Link>
 
         {/* Logo & Title */}
         <div className="text-center mb-8">
           <div className="inline-flex items-center justify-center w-20 h-20 bg-primary-600 rounded-full mb-4">
-            <Mail size={40} className="text-white" />
+            <MdEmail size={40} className="text-white" />
           </div>
           <h1 className="text-3xl font-bold text-gray-800 mb-2">
             Forgot Password?
@@ -88,7 +88,7 @@ const ForgotPassword = () => {
           ) : (
             <div className="text-center py-6">
               <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Mail size={32} className="text-green-600" />
+                <MdEmail size={32} className="text-green-600" />
               </div>
               <h3 className="text-xl font-semibold text-gray-800 mb-2">
                 Check Your Email

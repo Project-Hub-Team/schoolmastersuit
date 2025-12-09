@@ -1,7 +1,7 @@
 // Super Admin pages - Full implementations
 import React, { useState, useEffect } from 'react';
 import DashboardLayout from '../../components/DashboardLayout';
-import { Save, UserPlus, Trash2, Shield, Ticket, Plus, Copy, Settings as SettingsIcon, Download } from 'lucide-react';
+import { MdSave, MdPersonAdd, MdDelete, MdSecurity, MdConfirmationNumber, MdAdd, MdContentCopy, MdSettings as SettingsIcon, MdDownload } from 'react-icons/md';
 import { readAllRecords, createRecord, updateRecord, deleteRecord } from '../../utils/database';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import toast from 'react-hot-toast';
@@ -58,7 +58,7 @@ export const SystemSettings = () => {
             <p className="text-gray-600">Configure system-wide settings and preferences</p>
           </div>
           <button onClick={handleSave} disabled={loading} className="btn btn-primary flex items-center gap-2">
-            <Save size={18} />
+            <MdSave size={18} />
             {loading ? 'Saving...' : 'Save Settings'}
           </button>
         </div>
@@ -224,7 +224,7 @@ export const ManageAdmins = () => {
             <p className="text-gray-600">Add, edit, or remove administrator accounts</p>
           </div>
           <button onClick={() => setShowAddModal(true)} className="btn btn-primary flex items-center gap-2">
-            <UserPlus size={18} />
+            <MdPersonAdd size={18} />
             Add Admin
           </button>
         </div>
@@ -553,7 +553,7 @@ export const Vouchers = () => {
             disabled={vouchers.filter(v => v.status === 'unused').length === 0}
             className="btn btn-primary flex items-center gap-2"
           >
-            <Download size={18} />
+            <MdDownload size={18} />
             Export to PDF
           </button>
         </div>
@@ -602,7 +602,7 @@ export const Vouchers = () => {
               disabled={generating}
               className="btn btn-primary flex items-center gap-2"
             >
-              <Plus size={18} />
+              <MdAdd size={18} />
               {generating ? 'Generating...' : 'Generate Vouchers'}
             </button>
           </div>
@@ -613,7 +613,7 @@ export const Vouchers = () => {
           
           {vouchers.length === 0 ? (
             <div className="text-center py-12">
-              <Ticket className="mx-auto mb-3 text-gray-400" size={48} />
+              <MdConfirmationNumber className="mx-auto mb-3 text-gray-400" size={48} />
               <p className="text-lg font-medium text-gray-700">No vouchers generated</p>
               <p className="text-sm text-gray-500">Generate vouchers to allow student registration</p>
             </div>
@@ -662,7 +662,7 @@ export const Vouchers = () => {
                             className="text-primary-600 hover:text-primary-800"
                             title="Copy voucher details"
                           >
-                            <Copy size={18} />
+                            <MdContentCopy size={18} />
                           </button>
                         </td>
                       </tr>
@@ -677,3 +677,4 @@ export const Vouchers = () => {
     </DashboardLayout>
   );
 };
+

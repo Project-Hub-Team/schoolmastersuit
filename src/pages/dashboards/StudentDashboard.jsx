@@ -1,6 +1,6 @@
 import React from 'react';
 import DashboardLayout from '../../components/DashboardLayout';
-import { BarChart3, DollarSign, BookOpen, UserCheck } from 'lucide-react';
+import { MdBarChart, MdAttachMoney, MdMenuBook, MdPersonAdd } from 'react-icons/md';
 
 const StudentDashboard = () => {
   return (
@@ -19,7 +19,7 @@ const StudentDashboard = () => {
                 <p className="text-3xl font-bold text-gray-800">78.5%</p>
               </div>
               <div className="bg-blue-500 w-12 h-12 rounded-lg flex items-center justify-center">
-                <BarChart3 className="text-white" size={24} />
+                <MdBarChart className="text-white" size={24} />
               </div>
             </div>
           </div>
@@ -31,7 +31,7 @@ const StudentDashboard = () => {
                 <p className="text-3xl font-bold text-gray-800">GH₵ 250</p>
               </div>
               <div className="bg-orange-500 w-12 h-12 rounded-lg flex items-center justify-center">
-                <DollarSign className="text-white" size={24} />
+                <MdAttachMoney className="text-white" size={24} />
               </div>
             </div>
           </div>
@@ -43,7 +43,7 @@ const StudentDashboard = () => {
                 <p className="text-3xl font-bold text-gray-800">45</p>
               </div>
               <div className="bg-green-500 w-12 h-12 rounded-lg flex items-center justify-center">
-                <BookOpen className="text-white" size={24} />
+                <MdMenuBook className="text-white" size={24} />
               </div>
             </div>
           </div>
@@ -55,7 +55,7 @@ const StudentDashboard = () => {
                 <p className="text-3xl font-bold text-gray-800">96%</p>
               </div>
               <div className="bg-purple-500 w-12 h-12 rounded-lg flex items-center justify-center">
-                <UserCheck className="text-white" size={24} />
+                <MdPersonAdd className="text-white" size={24} />
               </div>
             </div>
           </div>

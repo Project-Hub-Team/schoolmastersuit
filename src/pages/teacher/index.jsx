@@ -1,7 +1,7 @@
 // Teacher pages - Full implementations
 import React, { useState, useEffect } from 'react';
 import DashboardLayout from '../../components/DashboardLayout';
-import { Calendar, Check, X, Download, BookOpen, Plus, Save, Users, FileText, Upload } from 'lucide-react';
+import { MdCalendarToday, MdCheck, MdClose, MdDownload, MdMenuBook, MdAdd, MdSave, MdPeople, MdDescription, MdCloudUpload } from 'react-icons/md';
 import { useAuth } from '../../contexts/AuthContext';
 import { readAllRecords, createRecord, updateRecord } from '../../utils/database';
 import { CLASSES, GRADING_SCALE } from '../../constants/ghanaEducation';
@@ -109,7 +109,7 @@ export const Attendance = () => {
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-bold">Students ({students.length})</h3>
               <button onClick={saveAttendance} className="btn btn-primary flex items-center gap-2">
-                <Save size={18} />
+                <MdSave size={18} />
                 Save Attendance
               </button>
             </div>
@@ -137,7 +137,7 @@ export const Attendance = () => {
                           : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                       }`}
                     >
-                      <Check size={18} />
+                      <MdCheck size={18} />
                       Present
                     </button>
                     <button
@@ -148,7 +148,7 @@ export const Attendance = () => {
                           : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                       }`}
                     >
-                      <X size={18} />
+                      <MdClose size={18} />
                       Absent
                     </button>
                   </div>
@@ -181,7 +181,7 @@ export const Attendance = () => {
           </div>
         ) : selectedClass && (
           <div className="card text-center py-12">
-            <Users className="mx-auto mb-3 text-gray-400" size={48} />
+            <MdPeople className="mx-auto mb-3 text-gray-400" size={48} />
             <p className="text-lg font-medium text-gray-700">No students found</p>
             <p className="text-sm text-gray-500">This class has no enrolled students</p>
           </div>
@@ -305,7 +305,7 @@ export const GradeEntry = () => {
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-bold">Enter Scores</h3>
               <button onClick={saveGrades} className="btn btn-primary flex items-center gap-2">
-                <Save size={18} />
+                <MdSave size={18} />
                 Save Grades
               </button>
             </div>
@@ -374,7 +374,7 @@ export const GradeEntry = () => {
           </div>
         ) : (
           <div className="card text-center py-12">
-            <FileText className="mx-auto mb-3 text-gray-400" size={48} />
+            <MdDescription className="mx-auto mb-3 text-gray-400" size={48} />
             <p className="text-lg font-medium text-gray-700">Select class and subject</p>
             <p className="text-sm text-gray-500">Choose a class and subject to enter grades</p>
           </div>
@@ -415,7 +415,7 @@ export const LessonNotes = () => {
             <p className="text-gray-600">Upload and manage teaching materials</p>
           </div>
           <button onClick={() => setShowAddModal(true)} className="btn btn-primary flex items-center gap-2">
-            <Plus size={18} />
+            <MdAdd size={18} />
             Upload Note
           </button>
         </div>
@@ -424,7 +424,7 @@ export const LessonNotes = () => {
           <LoadingSpinner />
         ) : notes.length === 0 ? (
           <div className="card text-center py-12">
-            <BookOpen className="mx-auto mb-3 text-gray-400" size={48} />
+            <MdMenuBook className="mx-auto mb-3 text-gray-400" size={48} />
             <p className="text-lg font-medium text-gray-700">No lesson notes yet</p>
             <p className="text-sm text-gray-500">Upload your first lesson note to get started</p>
           </div>
@@ -434,7 +434,7 @@ export const LessonNotes = () => {
               <div key={note.id} className="card hover:shadow-lg transition-shadow">
                 <div className="flex items-start justify-between mb-3">
                   <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center">
-                    <BookOpen className="text-primary-600" size={24} />
+                    <MdMenuBook className="text-primary-600" size={24} />
                   </div>
                   <span className="text-xs text-gray-500">
                     {new Date(note.createdAt).toLocaleDateString()}
@@ -445,7 +445,7 @@ export const LessonNotes = () => {
                 <p className="text-sm text-gray-600 mb-4">Class: {note.class}</p>
                 <div className="flex gap-2">
                   <button className="btn btn-secondary flex-1 text-sm">
-                    <Download size={16} className="inline mr-1" />
+                    <MdDownload size={16} className="inline mr-1" />
                     Download
                   </button>
                   <button className="btn btn-primary flex-1 text-sm">
@@ -517,7 +517,7 @@ export const MyClasses = () => {
 
         {myClasses.length === 0 ? (
           <div className="card text-center py-12">
-            <Users className="mx-auto mb-3 text-gray-400" size={48} />
+            <MdPeople className="mx-auto mb-3 text-gray-400" size={48} />
             <p className="text-lg font-medium text-gray-700">No classes assigned</p>
             <p className="text-sm text-gray-500">Contact your administrator to get class assignments</p>
           </div>
