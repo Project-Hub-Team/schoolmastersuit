@@ -1,0 +1,85 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // Helper function to check if user is authenticated
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Helper function to check user role
+    function hasRole(role) {
+      return isAuthenticated() && 
+             firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.role == role;
+    }
+    
+    // Helper function to check if user has any of the specified roles
+    function hasAnyRole(roles) {
+      return isAuthenticated() && 
+             firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.role in roles;
+    }
+    
+    // Student files
+    match /students/{studentId}/{allPaths=**} {
+      // Students can read/write their own files
+      // Admins and teachers can read all student files
+      // Only admins can write to any student files
+      allow read: if isAuthenticated() && 
+                     (request.auth.uid == studentId || 
+                      hasAnyRole(['super_admin', 'admin', 'teacher']));
+      allow write: if isAuthenticated() && 
+                      (request.auth.uid == studentId || 
+                       hasAnyRole(['super_admin', 'admin']));
+    }
+    
+    // Teacher files
+    match /teachers/{teacherId}/{allPaths=**} {
+      // Teachers can read/write their own files
+      // Admins can read/write all teacher files
+      allow read: if isAuthenticated() && 
+                     (request.auth.uid == teacherId || 
+                      hasAnyRole(['super_admin', 'admin']));
+      allow write: if isAuthenticated() && 
+                      (request.auth.uid == teacherId || 
+                       hasAnyRole(['super_admin', 'admin']));
+    }
+    
+    // Lesson notes
+    match /lessonNotes/{classId}/{subjectId}/{noteId} {
+      // All authenticated users can read
+      // Teachers and admins can write
+      allow read: if isAuthenticated();
+      allow write: if hasAnyRole(['super_admin', 'admin', 'teacher']);
+    }
+    
+    // School documents
+    match /school/{document=**} {
+      // All authenticated users can read
+      // Only super admin can write
+      allow read: if isAuthenticated();
+      allow write: if hasRole('super_admin');
+    }
+    
+    // Certificates and documents
+    match /certificates/{allPaths=**} {
+      allow read: if isAuthenticated();
+      allow write: if hasAnyRole(['super_admin', 'admin']);
+    }
+    
+    // File size validation (max 10MB for images, 50MB for documents)
+    function isValidSize(maxSizeMB) {
+      return request.resource.size <= maxSizeMB * 1024 * 1024;
+    }
+    
+    // File type validation
+    function isImage() {
+      return request.resource.contentType.matches('image/.*');
+    }
+    
+    function isDocument() {
+      return request.resource.contentType.matches('application/pdf') ||
+             request.resource.contentType.matches('application/msword') ||
+             request.resource.contentType.matches('application/vnd.openxmlformats-officedocument.*');
+    }
+  }
+}
