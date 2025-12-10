@@ -47,13 +47,13 @@ const DashboardLayout = ({ children, title }) => {
     if (role === USER_ROLES.SUPER_ADMIN) {
       return [
         { name: 'Dashboard', path: '/dashboard', icon: MdDashboard },
-        { name: 'System Settings', path: '/super-admin/settings', icon: MdSettings },
         { name: 'Manage Admins', path: '/super-admin/admins', icon: MdSecurity },
         { name: 'Vouchers', path: '/super-admin/vouchers', icon: MdDescription },
         { name: 'Students', path: '/admin/students', icon: MdPeople },
         { name: 'Teachers', path: '/admin/teachers', icon: MdSchool },
         { name: 'Classes', path: '/admin/classes', icon: MdMenuBook },
-        { name: 'Reports', path: '/admin/reports', icon: MdBarChart }
+        { name: 'Reports', path: '/admin/reports', icon: MdBarChart },
+        { name: 'System Settings', path: '/super-admin/settings', icon: MdSettings }
       ];
     }
 
@@ -105,12 +105,12 @@ const DashboardLayout = ({ children, title }) => {
 
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 flex flex-col ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
         {/* Logo/Header */}
-        <div className="h-16 flex items-center justify-between px-6 border-b border-gray-200">
+        <div className="h-16 flex items-center justify-between px-6 border-b border-gray-200 flex-shrink-0">
           <div className="flex items-center">
             <div className="w-10 h-10 bg-primary-600 rounded-lg flex items-center justify-center text-white font-bold text-xl">
               GH
@@ -128,7 +128,7 @@ const DashboardLayout = ({ children, title }) => {
         </div>
 
         {/* Navigation */}
-        <nav className="p-4 space-y-1">
+        <nav className="p-4 space-y-1 flex-1 overflow-y-auto">
           {navigationItems.map((item) => {
             const Icon = item.icon;
             const isActive = location.pathname === item.path;
@@ -137,22 +137,22 @@ const DashboardLayout = ({ children, title }) => {
               <Link
                 key={item.path}
                 to={item.path}
-                className={`flex items-center px-4 py-3 rounded-lg transition-colors ${
+                className={`flex items-center px-3 py-2 rounded-lg transition-colors ${
                   isActive
                     ? 'bg-primary-50 text-primary-700'
                     : 'text-gray-700 hover:bg-gray-100'
                 }`}
                 onClick={() => setSidebarOpen(false)}
               >
-                <Icon size={20} className="mr-3" />
-                <span className="font-medium">{item.name}</span>
+                <Icon size={18} className="mr-2 flex-shrink-0" />
+                <span className="font-medium text-sm truncate">{item.name}</span>
               </Link>
             );
           })}
         </nav>
 
         {/* User Info & Logout */}
-        <div className="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-200">
+        <div className="p-4 border-t border-gray-200 flex-shrink-0">
           <div className="flex items-center mb-3">
             <div className="w-10 h-10 bg-primary-600 rounded-full flex items-center justify-center text-white font-medium">
               {userProfile?.displayName?.charAt(0)?.toUpperCase() || 'U'}

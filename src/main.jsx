@@ -14,6 +14,21 @@ if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('/sw.js').then(
       (registration) => {
         console.log('SW registered: ', registration);
+        
+        // Check for updates every time the page loads
+        registration.update();
+        
+        // Listen for updates
+        registration.addEventListener('updatefound', () => {
+          const newWorker = registration.installing;
+          newWorker.addEventListener('statechange', () => {
+            if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+              // New service worker available, reload page
+              console.log('New service worker available, reloading...');
+              window.location.reload();
+            }
+          });
+        });
       },
       (error) => {
         console.log('SW registration failed: ', error);
@@ -25,7 +40,12 @@ if ('serviceWorker' in navigator) {
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <Provider store={store}>
-      <BrowserRouter>
+      <BrowserRouter
+        future={{
+          v7_startTransition: true,
+          v7_relativeSplatPath: true
+        }}
+      >
         <AuthProvider>
           <App />
           <Toaster

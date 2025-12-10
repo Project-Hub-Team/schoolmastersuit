@@ -1,6 +1,7 @@
 {
   "rules": {
     "users": {
+      ".read": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'super_admin' || root.child('users').child(auth.uid).child('role').val() === 'admin')",
       "$uid": {
         ".read": "$uid === auth.uid || root.child('users').child(auth.uid).child('role').val() === 'super_admin' || root.child('users').child(auth.uid).child('role').val() === 'admin'",
         ".write": "$uid === auth.uid || root.child('users').child(auth.uid).child('role').val() === 'super_admin'"

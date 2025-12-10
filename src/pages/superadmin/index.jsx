@@ -1,7 +1,7 @@
 // Super Admin pages - Full implementations
 import React, { useState, useEffect } from 'react';
 import DashboardLayout from '../../components/DashboardLayout';
-import { MdSave, MdPersonAdd, MdDelete, MdSecurity, MdConfirmationNumber, MdAdd, MdContentCopy, MdSettings as SettingsIcon, MdDownload } from 'react-icons/md';
+import { MdSave, MdPersonAdd, MdDelete, MdSecurity, MdConfirmationNumber, MdAdd, MdContentCopy, MdSettings as SettingsIcon, MdDownload, MdEdit, MdBlock, MdCheckCircle } from 'react-icons/md';
 import { readAllRecords, createRecord, updateRecord, deleteRecord } from '../../utils/database';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import toast from 'react-hot-toast';
@@ -175,6 +175,14 @@ export const ManageAdmins = () => {
   const [admins, setAdmins] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [selectedAdmin, setSelectedAdmin] = useState(null);
+  const [editForm, setEditForm] = useState({
+    displayName: '',
+    email: '',
+    role: 'admin'
+  });
 
   useEffect(() => {
     loadAdmins();
@@ -196,14 +204,73 @@ export const ManageAdmins = () => {
 
   const toggleAdminStatus = async (admin) => {
     try {
-      const newStatus = admin.status === 'active' ? 'inactive' : 'active';
-      const result = await updateRecord('users', admin.id, { status: newStatus });
+      const newStatus = admin.isActive === false ? true : false;
+      const result = await updateRecord(`users/${admin.id}`, { isActive: newStatus });
       if (result.success) {
-        toast.success(`Admin ${newStatus === 'active' ? 'activated' : 'deactivated'} successfully`);
+        toast.success(`Admin ${newStatus ? 'activated' : 'deactivated'} successfully`);
         loadAdmins();
+      } else {
+        toast.error(result.error || 'Failed to update admin status');
       }
     } catch (error) {
+      console.error('Toggle admin status error:', error);
       toast.error('Failed to update admin status');
+    }
+  };
+
+  const handleEdit = (admin) => {
+    setSelectedAdmin(admin);
+    setEditForm({
+      displayName: admin.displayName || '',
+      email: admin.email || '',
+      role: admin.role || 'admin'
+    });
+    setShowEditModal(true);
+  };
+
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    try {
+      const result = await updateRecord(`users/${selectedAdmin.id}`, {
+        displayName: editForm.displayName,
+        email: editForm.email,
+        role: editForm.role,
+        updatedAt: Date.now()
+      });
+      
+      if (result.success) {
+        toast.success('Admin updated successfully');
+        setShowEditModal(false);
+        setSelectedAdmin(null);
+        loadAdmins();
+      } else {
+        toast.error(result.error || 'Failed to update admin');
+      }
+    } catch (error) {
+      console.error('Update admin error:', error);
+      toast.error('Failed to update admin');
+    }
+  };
+
+  const handleDelete = (admin) => {
+    setSelectedAdmin(admin);
+    setShowDeleteModal(true);
+  };
+
+  const confirmDelete = async () => {
+    try {
+      const result = await deleteRecord(`users/${selectedAdmin.id}`);
+      if (result.success) {
+        toast.success('Admin deleted successfully');
+        setShowDeleteModal(false);
+        setSelectedAdmin(null);
+        loadAdmins();
+      } else {
+        toast.error(result.error || 'Failed to delete admin');
+      }
+    } catch (error) {
+      console.error('Delete admin error:', error);
+      toast.error('Failed to delete admin');
     }
   };
 
@@ -237,7 +304,7 @@ export const ManageAdmins = () => {
           <div className="card">
             <p className="text-sm text-gray-600">Active</p>
             <p className="text-2xl font-bold text-green-600">
-              {admins.filter(a => a.status === 'active').length}
+              {admins.filter(a => a.isActive !== false).length}
             </p>
           </div>
           <div className="card">
@@ -264,7 +331,7 @@ export const ManageAdmins = () => {
               <tbody className="divide-y divide-gray-200">
                 {admins.map(admin => (
                   <tr key={admin.id}>
-                    <td className="px-4 py-3 font-medium">{admin.fullName}</td>
+                    <td className="px-4 py-3 font-medium">{admin.displayName || admin.fullName || admin.email}</td>
                     <td className="px-4 py-3 text-sm">{admin.email}</td>
                     <td className="px-4 py-3">
                       <span className={`px-2 py-1 rounded-full text-xs font-medium ${
@@ -277,27 +344,44 @@ export const ManageAdmins = () => {
                     </td>
                     <td className="px-4 py-3">
                       <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                        admin.status === 'active'
+                        admin.isActive !== false
                           ? 'bg-green-100 text-green-800'
                           : 'bg-red-100 text-red-800'
                       }`}>
-                        {admin.status || 'active'}
+                        {admin.isActive !== false ? 'Active' : 'Inactive'}
                       </span>
                     </td>
                     <td className="px-4 py-3 text-sm">
                       {admin.createdAt ? new Date(admin.createdAt).toLocaleDateString() : 'N/A'}
                     </td>
                     <td className="px-4 py-3">
-                      <button
-                        onClick={() => toggleAdminStatus(admin)}
-                        className={`px-3 py-1 rounded text-sm ${
-                          admin.status === 'active'
-                            ? 'bg-red-50 text-red-600 hover:bg-red-100'
-                            : 'bg-green-50 text-green-600 hover:bg-green-100'
-                        }`}
-                      >
-                        {admin.status === 'active' ? 'Deactivate' : 'Activate'}
-                      </button>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => handleEdit(admin)}
+                          className="p-2 text-blue-600 hover:bg-blue-50 rounded"
+                          title="Edit"
+                        >
+                          <MdEdit size={18} />
+                        </button>
+                        <button
+                          onClick={() => toggleAdminStatus(admin)}
+                          className={`p-2 rounded ${
+                            admin.isActive !== false
+                              ? 'text-orange-600 hover:bg-orange-50'
+                              : 'text-green-600 hover:bg-green-50'
+                          }`}
+                          title={admin.isActive !== false ? 'Deactivate' : 'Activate'}
+                        >
+                          {admin.isActive !== false ? <MdBlock size={18} /> : <MdCheckCircle size={18} />}
+                        </button>
+                        <button
+                          onClick={() => handleDelete(admin)}
+                          className="p-2 text-red-600 hover:bg-red-50 rounded"
+                          title="Delete"
+                        >
+                          <MdDelete size={18} />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))}
@@ -319,6 +403,98 @@ export const ManageAdmins = () => {
               >
                 Close
               </button>
+            </div>
+          </div>
+        )}
+
+        {showEditModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-6 w-full max-w-md">
+              <h3 className="text-xl font-bold mb-4">Edit Administrator</h3>
+              <form onSubmit={handleUpdate} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Display Name
+                  </label>
+                  <input
+                    type="text"
+                    value={editForm.displayName}
+                    onChange={(e) => setEditForm({ ...editForm, displayName: e.target.value })}
+                    className="input"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Email
+                  </label>
+                  <input
+                    type="email"
+                    value={editForm.email}
+                    onChange={(e) => setEditForm({ ...editForm, email: e.target.value })}
+                    className="input"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Role
+                  </label>
+                  <select
+                    value={editForm.role}
+                    onChange={(e) => setEditForm({ ...editForm, role: e.target.value })}
+                    className="input"
+                  >
+                    <option value="admin">Admin</option>
+                    <option value="super_admin">Super Admin</option>
+                  </select>
+                </div>
+                <div className="flex gap-3 pt-4">
+                  <button type="submit" className="btn btn-primary flex-1">
+                    Update Admin
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setShowEditModal(false)}
+                    className="btn btn-secondary flex-1"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {showDeleteModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="bg-white rounded-lg p-6 w-full max-w-md">
+              <h3 className="text-xl font-bold mb-4 text-red-600">Confirm Delete</h3>
+              <p className="text-gray-700 mb-2">
+                Are you sure you want to delete this administrator?
+              </p>
+              <p className="text-sm text-gray-600 mb-4">
+                <strong>Name:</strong> {selectedAdmin?.displayName}<br />
+                <strong>Email:</strong> {selectedAdmin?.email}<br />
+                <strong>Role:</strong> {selectedAdmin?.role}
+              </p>
+              <p className="text-sm text-red-600 mb-6">
+                This action cannot be undone!
+              </p>
+              <div className="flex gap-3">
+                <button
+                  onClick={confirmDelete}
+                  className="btn bg-red-600 text-white hover:bg-red-700 flex-1"
+                >
+                  Delete
+                </button>
+                <button
+                  onClick={() => setShowDeleteModal(false)}
+                  className="btn btn-secondary flex-1"
+                >
+                  Cancel
+                </button>
+              </div>
             </div>
           </div>
         )}

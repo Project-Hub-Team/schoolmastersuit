@@ -12,7 +12,8 @@ import {
   sendPasswordResetEmail,
   updateProfile
 } from 'firebase/auth';
-import { auth } from '../config/firebase.config';
+import { ref as dbRef, update } from 'firebase/database';
+import { auth, database } from '../config/firebase.config';
 import { getUser, createUser } from '../utils/database';
 import { USER_ROLES } from '../constants/ghanaEducation';
 
@@ -86,10 +87,26 @@ export const AuthProvider = ({ children }) => {
       // Update last login time
       const userProfile = await getUser(userCredential.user.uid);
       if (userProfile.success) {
-        // Update last login timestamp
+        // Check if user account is active
+        if (userProfile.data.isActive === false) {
+          // Sign out the user immediately
+          await signOut(auth);
+          const errorMsg = 'Your account has been deactivated. Please contact an administrator.';
+          setError(errorMsg);
+          return { success: false, error: errorMsg };
+        }
+        
+        // Update last login timestamp AND ensure role is in users node
         await createUser(userCredential.user.uid, {
           ...userProfile.data,
           lastLogin: Date.now()
+        });
+        
+        // Also store role in /users/{uid} for database rules
+        await update(dbRef(database, `users/${userCredential.user.uid}`), {
+          role: userProfile.data.role,
+          email: userProfile.data.email,
+          displayName: userProfile.data.displayName
         });
       }
       
@@ -197,7 +214,15 @@ export const AuthProvider = ({ children }) => {
         // Fetch user profile from database
         const result = await getUser(user.uid);
         if (result.success) {
-          setUserProfile(result.data);
+          // Check if account is active
+          if (result.data.isActive === false) {
+            console.log('User account is inactive, signing out');
+            await signOut(auth);
+            setUserProfile(null);
+            setCurrentUser(null);
+          } else {
+            setUserProfile(result.data);
+          }
         } else {
           console.error('Failed to fetch user profile');
           setUserProfile(null);

@@ -1,10 +1,9 @@
 // Service Worker for Ghana School Management System PWA
-const CACHE_NAME = 'ghana-sms-v1.0.0';
+const CACHE_NAME = 'ghana-sms-v1.1.0';
 const urlsToCache = [
   '/',
   '/index.html',
-  '/manifest.json',
-  '/favicon.ico'
+  '/manifest.json'
 ];
 
 // Install Service Worker
@@ -13,7 +12,12 @@ self.addEventListener('install', (event) => {
     caches.open(CACHE_NAME)
       .then((cache) => {
         console.log('Opened cache');
-        return cache.addAll(urlsToCache);
+        // Cache files individually to avoid failures
+        return Promise.allSettled(
+          urlsToCache.map(url => 
+            cache.add(url).catch(err => console.log(`Failed to cache ${url}:`, err))
+          )
+        );
       })
   );
   self.skipWaiting();
@@ -38,17 +42,36 @@ self.addEventListener('activate', (event) => {
 
 // Fetch Strategy: Network First, fallback to Cache
 self.addEventListener('fetch', (event) => {
+  // Skip caching for non-GET requests (POST, PUT, DELETE, etc.)
+  if (event.request.method !== 'GET') {
+    event.respondWith(fetch(event.request));
+    return;
+  }
+
+  // Skip caching for Firebase and external API calls
+  if (
+    event.request.url.includes('firebaseio.com') ||
+    event.request.url.includes('googleapis.com') ||
+    event.request.url.includes('identitytoolkit.googleapis.com') ||
+    event.request.url.includes('firebasestorage.googleapis.com')
+  ) {
+    event.respondWith(fetch(event.request));
+    return;
+  }
+
   event.respondWith(
     fetch(event.request)
       .then((response) => {
-        // Clone the response
-        const responseToCache = response.clone();
-        
-        // Cache the fetched response
-        caches.open(CACHE_NAME)
-          .then((cache) => {
-            cache.put(event.request, responseToCache);
-          });
+        // Only cache successful GET responses
+        if (response && response.status === 200 && response.type === 'basic') {
+          const responseToCache = response.clone();
+          
+          caches.open(CACHE_NAME)
+            .then((cache) => {
+              cache.put(event.request, responseToCache);
+            })
+            .catch(err => console.log('Cache put error:', err));
+        }
         
         return response;
       })
