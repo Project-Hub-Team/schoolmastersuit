@@ -57,28 +57,28 @@ const SuperAdminDashboard = () => {
     {
       title: 'Total Students',
       value: stats.totalStudents,
-      icon: Users,
+      icon: MdPeople,
       color: 'bg-blue-500',
       textColor: 'text-blue-600'
     },
     {
       title: 'Total Teachers',
       value: stats.totalTeachers,
-      icon: GraduationCap,
+      icon: MdSchool,
       color: 'bg-green-500',
       textColor: 'text-green-600'
     },
     {
       title: 'Total Admins',
       value: stats.totalAdmins,
-      icon: UserCheck,
+      icon: MdPersonAdd,
       color: 'bg-purple-500',
       textColor: 'text-purple-600'
     },
     {
       title: 'Active Vouchers',
       value: stats.activeVouchers,
-      icon: BookOpen,
+      icon: MdMenuBook,
       color: 'bg-orange-500',
       textColor: 'text-orange-600'
     }
