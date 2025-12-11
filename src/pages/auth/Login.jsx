@@ -54,7 +54,7 @@ const Login = () => {
         }}
       >
         <div className="absolute inset-0 flex flex-col justify-center items-center text-white p-12">
-          <div className="inline-flex items-center justify-center w-32 h-32 bg-white rounded-full mb-6 p-4">
+          <div className="inline-flex items-center justify-center w-32 h-32 bg-white rounded-full mb-6 p-6 overflow-hidden">
             <img 
               src="/ALMA logo.png" 
               alt="ALMA Logo" 
