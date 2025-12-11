@@ -10,13 +10,24 @@ const InstallButton = () => {
     const isInstalled = window.matchMedia('(display-mode: standalone)').matches || 
                        window.navigator.standalone === true;
     
+    console.log('Install Button - Is installed:', isInstalled);
+    
     if (isInstalled) {
+      console.log('App already installed, hiding button');
       setShowInstallButton(false);
       return;
     }
 
+    // Check if user previously dismissed (store in sessionStorage, not localStorage)
+    const dismissed = sessionStorage.getItem('installPromptDismissed');
+    if (dismissed) {
+      console.log('Install prompt was dismissed this session');
+      // Don't return - allow it to show again on page refresh
+    }
+
     // Listen for the beforeinstallprompt event
     const handleBeforeInstallPrompt = (e) => {
+      console.log('beforeinstallprompt event fired');
       // Prevent the mini-infobar from appearing on mobile
       e.preventDefault();
       // Store the event so it can be triggered later
@@ -29,8 +40,10 @@ const InstallButton = () => {
 
     // Listen for app installed event
     const handleAppInstalled = () => {
+      console.log('App installed successfully');
       setShowInstallButton(false);
       setDeferredPrompt(null);
+      sessionStorage.removeItem('installPromptDismissed');
     };
 
     window.addEventListener('appinstalled', handleAppInstalled);
@@ -62,7 +75,10 @@ const InstallButton = () => {
   };
 
   const handleDismiss = () => {
+    console.log('Install prompt dismissed');
     setShowInstallButton(false);
+    // Store dismissal in sessionStorage (clears on browser close, not localStorage)
+    sessionStorage.setItem('installPromptDismissed', 'true');
   };
 
   if (!showInstallButton) {
