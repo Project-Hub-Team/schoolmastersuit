@@ -12,6 +12,7 @@ A complete Progressive Web App (PWA) for managing Ghanaian schools from Pre-Scho
 ### 👥 User Roles
 - **Super Admin**: Full system configuration and control
 - **Admin**: School management, student/teacher management
+- **Accountant**: Complete accounting and financial management
 - **Teacher**: Attendance, grading, lesson notes
 - **Student**: Access to results, fees, lesson notes
 
@@ -19,11 +20,33 @@ A complete Progressive Web App (PWA) for managing Ghanaian schools from Pre-Scho
 1. **Authentication**: Firebase Auth with role-based access
 2. **Student Management**: Registration, profiles, e-voucher system
 3. **Teacher Management**: Assignment, subjects, class teachers
-4. **Fees & Payments**: Real-time tracking, receipts
-5. **Grading System**: GES-compliant grading (A1-F9)
-6. **Attendance**: Daily tracking by class
-7. **Lesson Notes**: Upload and access by class/subject
-8. **Reports**: Comprehensive analytics and exports
+4. **Accounting System**: Separate database, transactions, fees, expenses, budgets
+5. **Fees & Payments**: Real-time tracking, receipts
+6. **Grading System**: GES-compliant grading (A1-F9)
+7. **Attendance**: Daily tracking by class
+8. **Lesson Notes**: Upload and access by class/subject
+9. **Reports**: Comprehensive analytics and exports
+
+## 💰 Accounting System
+
+### Features
+- **Separate Database**: Independent accounting database with bi-directional sync
+- **Transaction Management**: Income and expense tracking
+- **Fee Management**: Configure and manage school fees
+- **Expense Tracking**: Record and approve expenses
+- **Budget Management**: Create and monitor budgets
+- **Student Accounts**: Individual account balances and payment history
+- **Financial Reports**: Comprehensive reporting and analytics
+- **Audit Logs**: Complete audit trail of all financial activities
+
+### Database Synchronization
+- Real-time bidirectional sync between accounting and main database
+- Automated conflict resolution
+- Data integrity verification
+- Manual sync triggers available
+
+For detailed accounting documentation, see [ACCOUNTING_SYSTEM.md](./ACCOUNTING_SYSTEM.md)  
+For accountant setup guide, see [ACCOUNTANT_SETUP.md](./ACCOUNTANT_SETUP.md)
 
 ## 🚀 Quick Start
 

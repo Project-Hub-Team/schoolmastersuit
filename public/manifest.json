@@ -1,7 +1,7 @@
 {
-  "name": "Ghana School Management System",
-  "short_name": "Ghana SMS",
-  "description": "Complete School Management System for Ghanaian Schools (Pre-School to JHS)",
+  "name": "ALMA - Administrative & Learning Management Architecture",
+  "short_name": "ALMA",
+  "description": "Administrative & Learning Management Architecture - Complete solution for Pre-School to JHS",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

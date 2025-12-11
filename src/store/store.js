@@ -7,13 +7,15 @@ import studentsReducer from './slices/studentsSlice';
 import teachersReducer from './slices/teachersSlice';
 import classesReducer from './slices/classesSlice';
 import systemReducer from './slices/systemSlice';
+import accountingReducer from './slices/accountingSlice';
 
 export const store = configureStore({
   reducer: {
     students: studentsReducer,
     teachers: teachersReducer,
     classes: classesReducer,
-    system: systemReducer
+    system: systemReducer,
+    accounting: accountingReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({

@@ -6,7 +6,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   settings: {
-    schoolName: 'Ghana School Management System',
+    schoolName: 'ALMA - Administrative & Learning Management Architecture',
     schoolAddress: '',
     schoolPhone: '',
     schoolEmail: '',

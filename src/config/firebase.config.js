@@ -5,7 +5,8 @@ import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getDatabase } from 'firebase/database';
 import { getStorage } from 'firebase/storage';
-import { getAnalytics } from 'firebase/analytics';
+// Analytics disabled to avoid 403 errors
+// import { getAnalytics } from 'firebase/analytics';
 import { initializeAppCheck, ReCaptchaV3Provider } from 'firebase/app-check';
 
 const firebaseConfig = {
@@ -30,7 +31,8 @@ export const auth = getAuth(app);
 export const secondaryAuth = getAuth(secondaryApp);
 export const database = getDatabase(app);
 export const storage = getStorage(app);
-export const analytics = getAnalytics(app);
+// Analytics disabled to avoid 403 errors
+// export const analytics = getAnalytics(app);
 
 // Initialize App Check (uncomment in production)
 // Replace with your reCAPTCHA site key

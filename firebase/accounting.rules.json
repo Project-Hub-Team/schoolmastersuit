@@ -1,0 +1,96 @@
+{
+  "rules": {
+    ".read": false,
+    ".write": false,
+    
+    "transactions": {
+      ".indexOn": ["type", "status", "studentId", "createdAt"],
+      "$transactionId": {
+        ".read": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'accountant' || root.child('users').child(auth.uid).child('role').val() === 'super_admin')",
+        ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'accountant' || root.child('users').child(auth.uid).child('role').val() === 'super_admin')",
+        ".validate": "newData.hasChildren(['id', 'type', 'amount', 'description', 'status', 'createdAt'])",
+        "type": {
+          ".validate": "newData.isString() && (newData.val() === 'income' || newData.val() === 'expense')"
+        },
+        "amount": {
+          ".validate": "newData.isNumber() && newData.val() > 0"
+        },
+        "status": {
+          ".validate": "newData.isString() && (newData.val() === 'pending' || newData.val() === 'completed' || newData.val() === 'cancelled')"
+        }
+      }
+    },
+    
+    "feeStructures": {
+      ".indexOn": ["academicYear", "term", "isActive"],
+      "$feeId": {
+        ".read": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'accountant' || root.child('users').child(auth.uid).child('role').val() === 'super_admin' || root.child('users').child(auth.uid).child('role').val() === 'admin')",
+        ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'accountant' || root.child('users').child(auth.uid).child('role').val() === 'super_admin')",
+        ".validate": "newData.hasChildren(['id', 'name', 'amount', 'category', 'academicYear', 'term'])",
+        "amount": {
+          ".validate": "newData.isNumber() && newData.val() > 0"
+        },
+        "isActive": {
+          ".validate": "newData.isBoolean()"
+        }
+      }
+    },
+    
+    "studentAccounts": {
+      ".indexOn": ["studentId", "balance", "updatedAt"],
+      "$studentId": {
+        ".read": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'accountant' || root.child('users').child(auth.uid).child('role').val() === 'super_admin' || root.child('users').child(auth.uid).child('role').val() === 'admin' || auth.uid === $studentId)",
+        ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'accountant' || root.child('users').child(auth.uid).child('role').val() === 'super_admin')",
+        ".validate": "newData.hasChildren(['studentId', 'totalFees', 'totalPaid', 'balance'])",
+        "totalFees": {
+          ".validate": "newData.isNumber() && newData.val() >= 0"
+        },
+        "totalPaid": {
+          ".validate": "newData.isNumber() && newData.val() >= 0"
+        },
+        "balance": {
+          ".validate": "newData.isNumber()"
+        }
+      }
+    },
+    
+    "expenses": {
+      ".indexOn": ["status", "category", "createdAt"],
+      "$expenseId": {
+        ".read": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'accountant' || root.child('users').child(auth.uid).child('role').val() === 'super_admin')",
+        ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'accountant' || root.child('users').child(auth.uid).child('role').val() === 'super_admin')",
+        ".validate": "newData.hasChildren(['id', 'description', 'amount', 'category', 'status'])",
+        "amount": {
+          ".validate": "newData.isNumber() && newData.val() > 0"
+        },
+        "status": {
+          ".validate": "newData.isString() && (newData.val() === 'pending' || newData.val() === 'approved' || newData.val() === 'rejected')"
+        }
+      }
+    },
+    
+    "budgets": {
+      ".indexOn": ["category", "startDate", "endDate"],
+      "$budgetId": {
+        ".read": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'accountant' || root.child('users').child(auth.uid).child('role').val() === 'super_admin' || root.child('users').child(auth.uid).child('role').val() === 'admin')",
+        ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'accountant' || root.child('users').child(auth.uid).child('role').val() === 'super_admin')",
+        ".validate": "newData.hasChildren(['id', 'name', 'amount', 'category'])",
+        "amount": {
+          ".validate": "newData.isNumber() && newData.val() > 0"
+        },
+        "spent": {
+          ".validate": "newData.isNumber() && newData.val() >= 0"
+        }
+      }
+    },
+    
+    "auditLogs": {
+      ".indexOn": ["userId", "action", "timestamp"],
+      "$logId": {
+        ".read": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'accountant' || root.child('users').child(auth.uid).child('role').val() === 'super_admin')",
+        ".write": "auth != null && (root.child('users').child(auth.uid).child('role').val() === 'accountant' || root.child('users').child(auth.uid).child('role').val() === 'super_admin') && !data.exists()",
+        ".validate": "newData.hasChildren(['id', 'action', 'userId', 'timestamp'])"
+      }
+    }
+  }
+}

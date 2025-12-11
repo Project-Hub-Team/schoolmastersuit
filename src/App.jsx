@@ -2,6 +2,9 @@ import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from './contexts/AuthContext';
 
+// Accounting Sync Hook
+import { useAccountingSync } from './hooks/useAccountingSync';
+
 // Auth Pages
 import Login from './pages/auth/Login';
 import Register from './pages/auth/Register';
@@ -13,6 +16,7 @@ import SuperAdminDashboard from './pages/dashboards/SuperAdminDashboard';
 import AdminDashboard from './pages/dashboards/AdminDashboard';
 import TeacherDashboard from './pages/dashboards/TeacherDashboard';
 import StudentDashboard from './pages/dashboards/StudentDashboard';
+import AccountantDashboard from './pages/dashboards/AccountantDashboard';
 
 // Protected Route Component
 import ProtectedRoute from './components/ProtectedRoute';
@@ -43,10 +47,22 @@ import SystemSettings from './pages/superadmin/SystemSettings';
 import ManageAdmins from './pages/superadmin/ManageAdmins';
 import Vouchers from './pages/superadmin/Vouchers';
 
+// Accountant Pages
+import Transactions from './pages/accountant/Transactions';
+import FeeManagement from './pages/accountant/FeeManagement';
+import Expenses from './pages/accountant/Expenses';
+import Budgets from './pages/accountant/Budgets';
+import AccountingReports from './pages/accountant/Reports';
+import StudentAccounts from './pages/accountant/StudentAccounts';
+import AuditLogs from './pages/accountant/AuditLogs';
+
 import { USER_ROLES } from './constants/ghanaEducation';
 
 function App() {
   const { currentUser, userProfile, loading } = useAuth();
+  
+  // Initialize accounting database sync
+  useAccountingSync();
 
   if (loading) {
     return <LoadingSpinner fullScreen />;
@@ -79,6 +95,7 @@ function App() {
           <ProtectedRoute>
             {userProfile?.role === USER_ROLES.SUPER_ADMIN && <SuperAdminDashboard />}
             {userProfile?.role === USER_ROLES.ADMIN && <AdminDashboard />}
+            {userProfile?.role === USER_ROLES.ACCOUNTANT && <AccountantDashboard />}
             {userProfile?.role === USER_ROLES.TEACHER && <TeacherDashboard />}
             {userProfile?.role === USER_ROLES.STUDENT && <StudentDashboard />}
           </ProtectedRoute>
@@ -225,6 +242,64 @@ function App() {
         element={
           <ProtectedRoute allowedRoles={[USER_ROLES.STUDENT]}>
             <MyAttendance />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Accountant Routes */}
+      <Route
+        path="/accountant/transactions"
+        element={
+          <ProtectedRoute allowedRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.ACCOUNTANT]}>
+            <Transactions />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/accountant/fees"
+        element={
+          <ProtectedRoute allowedRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.ACCOUNTANT]}>
+            <FeeManagement />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/accountant/expenses"
+        element={
+          <ProtectedRoute allowedRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.ACCOUNTANT]}>
+            <Expenses />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/accountant/budgets"
+        element={
+          <ProtectedRoute allowedRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.ACCOUNTANT]}>
+            <Budgets />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/accountant/reports"
+        element={
+          <ProtectedRoute allowedRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.ACCOUNTANT]}>
+            <AccountingReports />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/accountant/student-accounts"
+        element={
+          <ProtectedRoute allowedRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.ACCOUNTANT]}>
+            <StudentAccounts />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/accountant/audit-logs"
+        element={
+          <ProtectedRoute allowedRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.ACCOUNTANT]}>
+            <AuditLogs />
           </ProtectedRoute>
         }
       />

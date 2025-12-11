@@ -8,7 +8,7 @@ import toast from 'react-hot-toast';
 
 export const SystemSettings = () => {
   const [settings, setSettings] = useState({
-    schoolName: 'Ghana School Management System',
+    schoolName: 'ALMA - Administrative & Learning Management Architecture',
     academicYear: '2024/2025',
     currentTerm: 'Term 1',
     schoolEmail: 'info@ghanaschool.edu.gh',

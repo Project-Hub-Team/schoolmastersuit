@@ -66,13 +66,13 @@ const Login = () => {
 
       {/* Right Side - Login Form */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-white">
-        <div className="max-w-md w-full">{/* Logo & Title - Mobile Only */}
+        <div className="max-w-lg w-full">{/* Logo & Title - Mobile Only */}
         <div className="text-center mb-8 lg:hidden">
-          <div className="inline-flex items-center justify-center w-20 h-20 bg-primary-600 rounded-full mb-4">
-            <MdSchool size={40} className="text-white" />
+          <div className="inline-flex items-center justify-center w-24 h-24 mb-4">
+            <img src="/ALMA logo.png" alt="ALMA Logo" className="w-24 h-24 object-contain" />
           </div>
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">
-            Ghana School Management
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2 leading-tight px-4">
+            Administrative & Learning<br />Management Architecture
           </h1>
           <p className="text-gray-600">Sign in to your account</p>
         </div>
@@ -171,7 +171,7 @@ const Login = () => {
 
         {/* Footer */}
         <p className="text-center text-sm text-gray-600 mt-6">
-          © 2025 Ghana School Management System. All rights reserved.
+          © 2025 ALMA - Administrative & Learning Management Architecture. All rights reserved.
         </p>
         </div>
       </div>

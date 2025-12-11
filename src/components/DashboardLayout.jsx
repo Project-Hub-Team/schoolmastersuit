@@ -27,10 +27,44 @@ import toast from 'react-hot-toast';
  */
 const DashboardLayout = ({ children, title }) => {
   const [sidebarOpen, setSidebarOpen] = React.useState(false);
+  const [isHovered, setIsHovered] = React.useState(false);
+  const sidebarRef = React.useRef(null);
   const { userProfile, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const settings = useSelector(selectSettings);
+
+  // Close sidebar when clicking outside on mobile
+  React.useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (sidebarRef.current && !sidebarRef.current.contains(event.target) && sidebarOpen) {
+        setSidebarOpen(false);
+      }
+    };
+
+    if (sidebarOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [sidebarOpen]);
+
+  // Auto-hide sidebar on desktop after navigation
+  const handleNavClick = () => {
+    if (window.innerWidth >= 1024) {
+      // On desktop, close after a short delay
+      setTimeout(() => {
+        if (!isHovered) {
+          setSidebarOpen(false);
+        }
+      }, 300);
+    } else {
+      // On mobile, close immediately
+      setSidebarOpen(false);
+    }
+  };
 
   const handleLogout = async () => {
     const result = await logout();
@@ -65,6 +99,19 @@ const DashboardLayout = ({ children, title }) => {
         { name: 'Classes', path: '/admin/classes', icon: MdMenuBook },
         { name: 'Fees', path: '/admin/fees', icon: MdAttachMoney },
         { name: 'Reports', path: '/admin/reports', icon: MdBarChart }
+      ];
+    }
+
+    if (role === USER_ROLES.ACCOUNTANT) {
+      return [
+        { name: 'Dashboard', path: '/dashboard', icon: MdDashboard },
+        { name: 'Transactions', path: '/accountant/transactions', icon: MdDescription },
+        { name: 'Fee Management', path: '/accountant/fees', icon: MdAttachMoney },
+        { name: 'Expenses', path: '/accountant/expenses', icon: MdBarChart },
+        { name: 'Budgets', path: '/accountant/budgets', icon: MdMenuBook },
+        { name: 'Student Accounts', path: '/accountant/student-accounts', icon: MdPeople },
+        { name: 'Reports', path: '/accountant/reports', icon: MdBarChart },
+        { name: 'Audit Logs', path: '/accountant/audit-logs', icon: MdSecurity }
       ];
     }
 
@@ -106,30 +153,54 @@ const DashboardLayout = ({ children, title }) => {
 
       {/* Sidebar */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-300 ease-in-out lg:translate-x-0 flex flex-col ${
-          sidebarOpen ? 'translate-x-0' : '-translate-x-full'
+        ref={sidebarRef}
+        onMouseEnter={() => {
+          setIsHovered(true);
+          if (window.innerWidth >= 1024) {
+            setSidebarOpen(true);
+          }
+        }}
+        onMouseLeave={() => {
+          setIsHovered(false);
+          if (window.innerWidth >= 1024) {
+            setTimeout(() => {
+              if (!isHovered) {
+                setSidebarOpen(false);
+              }
+            }, 300);
+          }
+        }}
+        className={`fixed inset-y-0 left-0 z-50 bg-white shadow-lg transform transition-all duration-300 ease-in-out flex flex-col ${
+          sidebarOpen ? 'w-64 translate-x-0' : 'w-16 -translate-x-full lg:translate-x-0'
         }`}
       >
         {/* Logo/Header */}
-        <div className="h-16 flex items-center justify-between px-6 border-b border-gray-200 flex-shrink-0">
-          <div className="flex items-center">
-            <div className="w-10 h-10 bg-primary-600 rounded-lg flex items-center justify-center text-white font-bold text-xl">
-              GH
+        <div className={`h-20 flex items-center px-4 border-b border-gray-200 flex-shrink-0 ${!sidebarOpen ? 'justify-center' : 'justify-between'}`}>
+          <div className="flex items-center overflow-hidden">
+            <img 
+              src="/ALMA logo.png" 
+              alt="ALMA Logo" 
+              className="w-12 h-12 object-contain flex-shrink-0"
+            />
+            <div className={`ml-3 transition-opacity duration-300 ${sidebarOpen ? 'opacity-100' : 'opacity-0 lg:hidden'}`}>
+              <div className="font-bold text-slate-900 text-[10px] leading-tight">
+                Administrative & Learning
+              </div>
+              <div className="font-bold text-slate-900 text-[10px] leading-tight">
+                Management Architecture
+              </div>
             </div>
-            <span className="ml-3 font-semibold text-gray-800 text-sm">
-              {settings.schoolName?.substring(0, 20) || 'School SMS'}
-            </span>
           </div>
           <button
             onClick={() => setSidebarOpen(false)}
-            className="lg:hidden text-gray-500 hover:text-gray-700"
+            className={`text-gray-500 hover:text-gray-700 ${sidebarOpen ? 'lg:hidden' : 'hidden'}`}
           >
             <MdClose size={24} />
           </button>
         </div>
 
         {/* Navigation */}
-        <nav className="p-4 space-y-1 flex-1 overflow-y-auto">
+        <nav className={`p-2 space-y-1 flex-1 overflow-y-auto ${!sidebarOpen ? 'lg:px-1' : ''}`}>
           {navigationItems.map((item) => {
             const Icon = item.icon;
             const isActive = location.pathname === item.path;
@@ -138,27 +209,36 @@ const DashboardLayout = ({ children, title }) => {
               <Link
                 key={item.path}
                 to={item.path}
-                className={`flex items-center px-3 py-2 rounded-lg transition-colors ${
+                className={`flex items-center px-3 py-2.5 rounded-lg transition-all group relative ${
                   isActive
                     ? 'bg-primary-50 text-primary-700'
                     : 'text-gray-700 hover:bg-gray-100'
-                }`}
-                onClick={() => setSidebarOpen(false)}
+                } ${!sidebarOpen ? 'lg:justify-center lg:px-2' : ''}`}
+                onClick={handleNavClick}
+                title={!sidebarOpen ? item.name : ''}
               >
-                <Icon size={18} className="mr-2 flex-shrink-0" />
-                <span className="font-medium text-sm truncate">{item.name}</span>
+                <Icon size={20} className={`flex-shrink-0 ${sidebarOpen ? 'mr-3' : 'lg:mr-0'}`} />
+                <span className={`font-medium text-sm truncate transition-opacity duration-300 ${sidebarOpen ? 'opacity-100' : 'opacity-0 lg:hidden'}`}>
+                  {item.name}
+                </span>
+                {/* Tooltip on hover for collapsed state */}
+                {!sidebarOpen && (
+                  <span className="absolute left-full ml-2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 whitespace-nowrap pointer-events-none transition-opacity z-50 hidden lg:block">
+                    {item.name}
+                  </span>
+                )}
               </Link>
             );
           })}
         </nav>
 
         {/* User Info & Logout */}
-        <div className="p-4 border-t border-gray-200 flex-shrink-0">
-          <div className="flex items-center mb-3">
-            <div className="w-10 h-10 bg-primary-600 rounded-full flex items-center justify-center text-white font-medium">
+        <div className={`p-4 border-t border-gray-200 flex-shrink-0 ${!sidebarOpen ? 'lg:p-2' : ''}`}>
+          <div className={`flex items-center mb-3 ${!sidebarOpen ? 'lg:justify-center lg:mb-2' : ''}`}>
+            <div className="w-10 h-10 bg-primary-600 rounded-full flex items-center justify-center text-white font-medium flex-shrink-0">
               {userProfile?.displayName?.charAt(0)?.toUpperCase() || 'U'}
             </div>
-            <div className="ml-3 flex-1">
+            <div className={`ml-3 flex-1 transition-opacity duration-300 ${sidebarOpen ? 'opacity-100' : 'opacity-0 lg:hidden'}`}>
               <p className="text-sm font-medium text-gray-800 truncate">
                 {userProfile?.displayName || 'User'}
               </p>
@@ -169,18 +249,25 @@ const DashboardLayout = ({ children, title }) => {
           </div>
           <button
             onClick={handleLogout}
-            className="w-full flex items-center justify-center px-4 py-2 bg-red-50 text-red-700 rounded-lg hover:bg-red-100 transition-colors"
+            className={`w-full flex items-center justify-center px-3 py-2 bg-red-50 text-red-700 rounded-lg hover:bg-red-100 transition-colors group relative ${!sidebarOpen ? 'lg:px-2' : ''}`}
+            title={!sidebarOpen ? 'Logout' : ''}
           >
-            <MdLogout size={18} className="mr-2" />
-            <span className="font-medium">Logout</span>
+            <MdLogout size={18} className={`flex-shrink-0 ${sidebarOpen ? 'mr-2' : 'lg:mr-0'}`} />
+            <span className={`font-medium text-sm transition-opacity duration-300 ${sidebarOpen ? 'opacity-100' : 'opacity-0 lg:hidden'}`}>Logout</span>
+            {/* Tooltip for collapsed state */}
+            {!sidebarOpen && (
+              <span className="absolute left-full ml-2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 whitespace-nowrap pointer-events-none transition-opacity z-50 hidden lg:block">
+                Logout
+              </span>
+            )}
           </button>
         </div>
       </aside>
 
       {/* Main Content */}
-      <div className="lg:pl-64">
+      <div className={`transition-all duration-300 ${sidebarOpen ? 'lg:pl-64' : 'lg:pl-16'}`}>
         {/* Top Header */}
-        <header className="h-16 bg-white shadow-sm flex items-center justify-between px-6">
+        <header className="h-20 bg-white shadow-sm flex items-center justify-between px-6">
           <div className="flex items-center">
             <button
               onClick={() => setSidebarOpen(true)}

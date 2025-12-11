@@ -149,6 +149,7 @@ export const TERMS = [
 export const USER_ROLES = {
   SUPER_ADMIN: 'super_admin',
   ADMIN: 'admin',
+  ACCOUNTANT: 'accountant',
   TEACHER: 'teacher',
   STUDENT: 'student',
   PARENT: 'parent'
