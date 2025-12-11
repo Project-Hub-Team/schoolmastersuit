@@ -61,7 +61,7 @@ import { USER_ROLES } from './constants/ghanaEducation';
 function App() {
   const { currentUser, userProfile, loading } = useAuth();
   
-  // Initialize accounting database sync
+  // Initialize accounting database sync (only if configured)
   useAccountingSync();
 
   if (loading) {

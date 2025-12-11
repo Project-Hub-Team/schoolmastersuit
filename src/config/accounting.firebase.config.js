@@ -2,7 +2,8 @@
 // Separate Firebase Instance for Accounting Module
 
 import { initializeApp } from 'firebase/app';
-import { getAuth } from 'firebase/auth';
+// Auth not needed - we use main app's auth
+// import { getAuth } from 'firebase/auth';
 import { getDatabase } from 'firebase/database';
 import { getStorage } from 'firebase/storage';
 // Analytics disabled to avoid 403 errors
@@ -21,14 +22,24 @@ const accountingFirebaseConfig = {
   measurementId: import.meta.env.VITE_ACCOUNTING_FIREBASE_MEASUREMENT_ID || "G-HPQ18CBRWE"
 };
 
-// Initialize Accounting Firebase App
-const accountingApp = initializeApp(accountingFirebaseConfig, 'AccountingApp');
+// Initialize Accounting Firebase App with error handling
+let accountingApp = null;
+// Auth not needed - we use main app's auth (shared authentication)
+let accountingDatabase = null;
+let accountingStorage = null;
+let accountingConfigured = false;
 
-// Initialize Accounting Firebase Services
-export const accountingAuth = getAuth(accountingApp);
-export const accountingDatabase = getDatabase(accountingApp);
-export const accountingStorage = getStorage(accountingApp);
-// Analytics disabled to avoid 403 errors
-// export const accountingAnalytics = getAnalytics(accountingApp);
+try {
+  accountingApp = initializeApp(accountingFirebaseConfig, 'AccountingApp');
+  // Only initialize database and storage, not auth
+  accountingDatabase = getDatabase(accountingApp);
+  accountingStorage = getStorage(accountingApp);
+  accountingConfigured = true;
+  console.log('✅ Accounting database configured successfully');
+} catch (error) {
+  console.warn('⚠️ Accounting database not configured:', error.message);
+  console.warn('Accounting features will be disabled. Configure .env file to enable.');
+}
 
+export { accountingDatabase, accountingStorage, accountingConfigured };
 export default accountingApp;

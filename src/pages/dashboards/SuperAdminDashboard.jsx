@@ -45,9 +45,14 @@ const SuperAdminDashboard = () => {
       let adminCount = 0;
 
       if (usersResult.success && usersResult.data) {
-        studentCount = usersResult.data.filter(u => u.role === 'student').length;
-        teacherCount = usersResult.data.filter(u => u.role === 'teacher').length;
-        adminCount = usersResult.data.filter(u => u.role === 'admin' || u.role === 'super_admin').length;
+        // Convert to array if it's an object
+        const usersArray = Array.isArray(usersResult.data) 
+          ? usersResult.data 
+          : Object.values(usersResult.data || {});
+        
+        studentCount = usersArray.filter(u => u && u.role === 'student').length;
+        teacherCount = usersArray.filter(u => u && u.role === 'teacher').length;
+        adminCount = usersArray.filter(u => u && (u.role === 'admin' || u.role === 'super_admin' || u.role === 'accountant')).length;
       }
 
       // Fallback to dedicated tables if users table is empty
@@ -61,11 +66,21 @@ const SuperAdminDashboard = () => {
         adminCount = adminsResult.data.length;
       }
 
+      // Handle vouchers data (convert to array if object)
+      let activeVoucherCount = 0;
+      if (vouchersResult.success && vouchersResult.data) {
+        const vouchersArray = Array.isArray(vouchersResult.data) 
+          ? vouchersResult.data 
+          : Object.values(vouchersResult.data || {});
+        
+        activeVoucherCount = vouchersArray.filter(v => v && !v.used && v.status === 'unused').length;
+      }
+
       const newStats = {
         totalStudents: studentCount,
         totalTeachers: teacherCount,
         totalAdmins: adminCount,
-        activeVouchers: (vouchersResult.success && vouchersResult.data) ? vouchersResult.data.filter(v => !v.used && v.status === 'unused').length : 0
+        activeVouchers: activeVoucherCount
       };
 
       setStats(newStats);
@@ -74,9 +89,14 @@ const SuperAdminDashboard = () => {
       const activities = [];
       
       if (usersResult.success && usersResult.data) {
+        // Convert to array if it's an object
+        const usersArray = Array.isArray(usersResult.data) 
+          ? usersResult.data 
+          : Object.values(usersResult.data || {});
+        
         // Recent students
-        const recentStudents = usersResult.data
-          .filter(u => u.role === 'student')
+        const recentStudents = usersArray
+          .filter(u => u && u.role === 'student')
           .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0))
           .slice(0, 3);
         
@@ -91,8 +111,8 @@ const SuperAdminDashboard = () => {
         });
 
         // Recent teachers
-        const recentTeachers = usersResult.data
-          .filter(u => u.role === 'teacher')
+        const recentTeachers = usersArray
+          .filter(u => u && u.role === 'teacher')
           .sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0))
           .slice(0, 2);
         

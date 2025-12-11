@@ -17,7 +17,7 @@ import {
   onValue,
   off
 } from 'firebase/database';
-import { accountingDatabase } from '../config/accounting.firebase.config';
+import { accountingDatabase, accountingConfigured } from '../config/accounting.firebase.config';
 import { database } from '../config/firebase.config';
 
 // ============================================
@@ -29,6 +29,11 @@ import { database } from '../config/firebase.config';
  */
 export const createTransaction = async (transactionData) => {
   try {
+    // Check if accounting database is configured
+    if (!accountingConfigured || !accountingDatabase) {
+      return { success: false, error: 'Accounting database not configured' };
+    }
+
     const transactionRef = push(ref(accountingDatabase, 'transactions'));
     const transactionId = transactionRef.key;
     

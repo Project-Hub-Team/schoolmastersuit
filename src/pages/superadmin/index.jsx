@@ -517,7 +517,11 @@ export const Vouchers = () => {
     try {
       const result = await readAllRecords('vouchers');
       if (result.success) {
-        setVouchers(result.data);
+        // Convert to array if it's an object
+        const vouchersData = Array.isArray(result.data) 
+          ? result.data 
+          : Object.values(result.data || {});
+        setVouchers(vouchersData);
       }
     } catch (error) {
       toast.error('Failed to load vouchers');

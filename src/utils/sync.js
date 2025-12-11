@@ -5,7 +5,7 @@
 
 import { ref, get, set, update, onValue, off } from 'firebase/database';
 import { database } from '../config/firebase.config';
-import { accountingDatabase } from '../config/accounting.firebase.config';
+import { accountingDatabase, accountingConfigured } from '../config/accounting.firebase.config';
 import {
   updateStudentAccountBalance,
   createTransaction
@@ -31,6 +31,11 @@ const SYNC_CONFIG = {
  */
 export const syncStudentFeesFromMain = async (studentId) => {
   try {
+    // Check if accounting database is configured
+    if (!accountingConfigured || !accountingDatabase) {
+      return { success: false, error: 'Accounting database not configured' };
+    }
+
     // Get student data from main database
     const studentRef = ref(database, `students/${studentId}`);
     const snapshot = await get(studentRef);
@@ -253,6 +258,15 @@ export const syncFeeStructureToMain = async (feeStructure) => {
  */
 export const checkSyncStatus = async () => {
   try {
+    // Check if accounting database is configured
+    if (!accountingConfigured || !accountingDatabase) {
+      return { 
+        success: false, 
+        error: 'Accounting database not configured',
+        data: { inSync: false, mainDatabaseStudents: 0, accountingDatabaseAccounts: 0 }
+      };
+    }
+
     const mainStudentsRef = ref(database, 'students');
     const mainSnapshot = await get(mainStudentsRef);
 

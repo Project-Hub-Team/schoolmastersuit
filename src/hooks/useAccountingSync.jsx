@@ -7,6 +7,7 @@
 import { useEffect, useRef } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import { USER_ROLES } from '../constants/ghanaEducation';
+import { accountingConfigured } from '../config/accounting.firebase.config';
 import {
   initializeSyncSystem,
   cleanupSyncSystem,
@@ -21,6 +22,12 @@ export const useAccountingSync = () => {
   const autoSyncStarted = useRef(false);
 
   useEffect(() => {
+    // Check if accounting database is configured
+    if (!accountingConfigured) {
+      console.log('⚠️ Accounting sync disabled - database not configured');
+      return;
+    }
+
     // Only initialize sync for accountant and super admin roles
     const shouldSync = userProfile?.role === USER_ROLES.ACCOUNTANT || 
                       userProfile?.role === USER_ROLES.SUPER_ADMIN;
