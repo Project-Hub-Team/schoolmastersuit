@@ -70,7 +70,7 @@ const InstallButton = () => {
   }
 
   return (
-    <div className="fixed bottom-4 right-4 z-50 animate-slide-up">
+    <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 animate-slide-down">
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-4 max-w-sm flex items-center gap-3 border border-gray-200 dark:border-gray-700">
         <div className="flex-shrink-0">
           <img 
