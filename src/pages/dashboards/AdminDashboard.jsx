@@ -34,8 +34,12 @@ const AdminDashboard = () => {
       let teacherCount = 0;
 
       if (usersResult.success && usersResult.data) {
-        studentCount = usersResult.data.filter(u => u.role === 'student').length;
-        teacherCount = usersResult.data.filter(u => u.role === 'teacher').length;
+        // Convert object to array if needed
+        const usersArray = Array.isArray(usersResult.data) 
+          ? usersResult.data 
+          : Object.values(usersResult.data);
+        studentCount = usersArray.filter(u => u.role === 'student').length;
+        teacherCount = usersArray.filter(u => u.role === 'teacher').length;
       }
 
       // Fallback to dedicated tables if users table is empty
@@ -49,7 +53,11 @@ const AdminDashboard = () => {
       // Calculate pending fees
       let totalPendingFees = 0;
       if (feesResult.success && feesResult.data) {
-        feesResult.data.forEach(fee => {
+        // Convert object to array if needed
+        const feesArray = Array.isArray(feesResult.data) 
+          ? feesResult.data 
+          : Object.values(feesResult.data);
+        feesArray.forEach(fee => {
           if (fee.status === 'pending' || fee.balance > 0) {
             totalPendingFees += fee.balance || fee.amount || 0;
           }
@@ -60,7 +68,8 @@ const AdminDashboard = () => {
         totalStudents: studentCount,
         totalTeachers: teacherCount,
         pendingFees: totalPendingFees,
-        activeClasses: (classesResult.success && classesResult.data) ? classesResult.data.filter(c => c.isActive !== false).length : 0
+        activeClasses: (classesResult.success && classesResult.data) ? 
+          (Array.isArray(classesResult.data) ? classesResult.data : Object.values(classesResult.data)).filter(c => c.isActive !== false).length : 0
       };
 
       setStats(newStats);
