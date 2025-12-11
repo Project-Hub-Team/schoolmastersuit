@@ -45,10 +45,10 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex flex-col lg:flex-row">
       {/* Left Side - Image Background */}
       <div 
-        className="hidden lg:block lg:w-1/2 bg-cover bg-center relative"
+        className="hidden lg:flex lg:w-1/2 bg-cover bg-center relative"
         style={{
           backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('/bg.jpeg')`
         }}
@@ -69,114 +69,137 @@ const Login = () => {
       </div>
 
       {/* Right Side - Login Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-white">
-        <div className="max-w-lg w-full">{/* Logo & Title - Mobile Only */}
-        <div className="text-center mb-8 lg:hidden">
-          <div className="inline-flex items-center justify-center w-24 h-24 mb-4">
-            <img src="/ALMA logo.png" alt="ALMA Logo" className="w-24 h-24 object-contain" />
-          </div>
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2 leading-tight px-4">
-            Administrative & Learning<br />Management Architecture
-          </h1>
-          <p className="text-gray-600">Sign in to your account</p>
-        </div>
-
-        {/* Desktop Title */}
-        <div className="hidden lg:block text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">
-            Sign In
-          </h1>
-          <p className="text-gray-600">Enter your credentials to continue</p>
-        </div>
-
-        {/* Login Form */}
-        <div className="bg-white rounded-xl shadow-lg p-8">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Email */}
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                Email Address
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                className="input-field"
-                placeholder="Enter your email"
-                required
+      <div className="w-full lg:w-1/2 flex items-center justify-center p-4 sm:p-6 lg:p-8 bg-gradient-to-br from-gray-50 to-white min-h-screen">
+        <div className="max-w-md w-full">
+          {/* Logo & Title - Mobile Only */}
+          <div className="text-center mb-6 sm:mb-8 lg:hidden">
+            <div className="inline-flex items-center justify-center w-20 h-20 sm:w-24 sm:h-24 mb-4 bg-white rounded-full shadow-lg p-4">
+              <img 
+                src="/ALMA logo.png" 
+                alt="ALMA Logo" 
+                className="w-full h-full object-contain" 
               />
             </div>
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-800 mb-2 leading-tight">
+              ALMA
+            </h1>
+            <p className="text-xs sm:text-sm text-gray-600 px-4">
+              Administrative & Learning Management Architecture
+            </p>
+          </div>
 
-            {/* Password */}
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
-                Password
-              </label>
-              <div className="relative">
+          {/* Desktop Title */}
+          <div className="hidden lg:block text-center mb-8">
+            <h1 className="text-3xl font-bold text-gray-800 mb-2">
+              Sign In
+            </h1>
+            <p className="text-gray-600">Enter your credentials to continue</p>
+          </div>
+
+          {/* Login Form */}
+          <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-8 border border-gray-100">
+            {/* Mobile: Sign In Title */}
+            <div className="lg:hidden text-center mb-6">
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-800">Sign In</h2>
+              <p className="text-sm text-gray-600 mt-1">Enter your credentials to continue</p>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-5">
+              {/* Email */}
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                  Email Address
+                </label>
                 <input
-                  type={showPassword ? 'text' : 'password'}
-                  id="password"
-                  name="password"
-                  value={formData.password}
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
                   onChange={handleChange}
-                  className="input-field pr-10"
-                  placeholder="Enter your password"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#006B3F] focus:border-transparent transition-all"
+                  placeholder="Enter your email"
                   required
                 />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                >
-                  {showPassword ? <MdVisibilityOff size={20} /> : <MdVisibility size={20} />}
-                </button>
               </div>
+
+              {/* Password */}
+              <div>
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-2">
+                  Password
+                </label>
+                <div className="relative">
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    id="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#006B3F] focus:border-transparent transition-all"
+                    placeholder="Enter your password"
+                    required
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 p-1"
+                  >
+                    {showPassword ? <MdVisibilityOff size={22} /> : <MdVisibility size={22} />}
+                  </button>
+                </div>
+              </div>
+
+              {/* Forgot Password */}
+              <div className="text-right">
+                <Link
+                  to="/forgot-password"
+                  className="text-sm text-[#006B3F] hover:text-[#005030] font-medium transition-colors"
+                >
+                  Forgot Password?
+                </Link>
+              </div>
+
+              {/* Submit Button */}
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-[#006B3F] hover:bg-[#005030] text-white font-semibold py-3 px-4 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl"
+              >
+                {loading ? (
+                  <span className="flex items-center justify-center">
+                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Signing in...
+                  </span>
+                ) : (
+                  'Sign In'
+                )}
+              </button>
+            </form>
+
+            {/* Divider */}
+            <div className="my-6 flex items-center">
+              <div className="flex-1 border-t border-gray-300"></div>
+              <span className="px-4 text-xs sm:text-sm text-gray-500 font-medium">OR</span>
+              <div className="flex-1 border-t border-gray-300"></div>
             </div>
 
-            {/* Forgot Password */}
-            <div className="text-right">
+            {/* Alternative Actions */}
+            <div className="space-y-3">
               <Link
-                to="/forgot-password"
-                className="text-sm text-primary-600 hover:text-primary-700 font-medium"
+                to="/voucher-registration"
+                className="block w-full text-center py-3 px-4 border-2 border-[#006B3F] text-[#006B3F] font-semibold rounded-lg hover:bg-[#006B3F] hover:text-white transition-all duration-200"
               >
-                Forgot Password?
+                Register with E-Voucher
               </Link>
             </div>
-
-            {/* Submit Button */}
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full btn-primary disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {loading ? 'Signing in...' : 'Sign In'}
-            </button>
-          </form>
-
-          {/* Divider */}
-          <div className="my-6 flex items-center">
-            <div className="flex-1 border-t border-gray-300"></div>
-            <span className="px-4 text-sm text-gray-500">OR</span>
-            <div className="flex-1 border-t border-gray-300"></div>
           </div>
 
-          {/* Alternative Actions */}
-          <div className="space-y-3">
-            <Link
-              to="/voucher-registration"
-              className="block w-full text-center py-3 px-4 border-2 border-primary-600 text-primary-600 font-medium rounded-lg hover:bg-primary-50 transition-colors"
-            >
-              Register with E-Voucher
-            </Link>
-          </div>
-        </div>
-
-        {/* Footer */}
-        <p className="text-center text-sm text-gray-600 mt-6">
-          © 2025 ALMA - Administrative & Learning Management Architecture. All rights reserved.
-        </p>
+          {/* Footer */}
+          <p className="text-center text-xs sm:text-sm text-gray-600 mt-6 px-4">
+            © 2025 ALMA. All rights reserved.
+          </p>
         </div>
       </div>
     </div>
