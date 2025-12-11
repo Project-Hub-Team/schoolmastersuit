@@ -21,6 +21,7 @@ import AccountantDashboard from './pages/dashboards/AccountantDashboard';
 // Protected Route Component
 import ProtectedRoute from './components/ProtectedRoute';
 import LoadingSpinner from './components/LoadingSpinner';
+import InstallButton from './components/InstallButton';
 
 // Admin Pages
 import { Students } from './pages/admin/Students';
@@ -69,24 +70,25 @@ function App() {
   }
 
   return (
-    <Routes>
-      {/* Public Routes */}
-      <Route
-        path="/login"
-        element={!currentUser ? <Login /> : <Navigate to="/dashboard" />}
-      />
-      <Route
-        path="/register"
-        element={!currentUser ? <Register /> : <Navigate to="/dashboard" />}
-      />
-      <Route
-        path="/forgot-password"
-        element={!currentUser ? <ForgotPassword /> : <Navigate to="/dashboard" />}
-      />
-      <Route
-        path="/voucher-registration"
-        element={!currentUser ? <VoucherRegistration /> : <Navigate to="/dashboard" />}
-      />
+    <>
+      <Routes>
+        {/* Public Routes */}
+        <Route
+          path="/login"
+          element={!currentUser ? <Login /> : <Navigate to="/dashboard" />}
+        />
+        <Route
+          path="/register"
+          element={!currentUser ? <Register /> : <Navigate to="/dashboard" />}
+        />
+        <Route
+          path="/forgot-password"
+          element={!currentUser ? <ForgotPassword /> : <Navigate to="/dashboard" />}
+        />
+        <Route
+          path="/voucher-registration"
+          element={!currentUser ? <VoucherRegistration /> : <Navigate to="/dashboard" />}
+        />
 
       {/* Dashboard Route - Redirects based on role */}
       <Route
@@ -313,6 +315,10 @@ function App() {
       {/* 404 Not Found */}
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
+    
+    {/* Install Button - Shows on all pages when not installed */}
+    <InstallButton />
+    </>
   );
 }
 
