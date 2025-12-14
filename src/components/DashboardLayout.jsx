@@ -97,6 +97,7 @@ const DashboardLayout = ({ children, title }) => {
         { name: 'Students', path: '/admin/students', icon: MdPeople },
         { name: 'Teachers', path: '/admin/teachers', icon: MdSchool },
         { name: 'Classes', path: '/admin/classes', icon: MdMenuBook },
+        { name: 'Results', path: '/admin/results', icon: MdDescription },
         { name: 'Fees', path: '/admin/fees', icon: MdAttachMoney },
         { name: 'Reports', path: '/admin/reports', icon: MdBarChart }
       ];
@@ -122,6 +123,7 @@ const DashboardLayout = ({ children, title }) => {
         { name: 'Attendance', path: '/teacher/attendance', icon: MdPersonAdd },
         { name: 'Attendance History', path: '/teacher/attendance-history', icon: MdBarChart },
         { name: 'Grade Entry', path: '/teacher/grades', icon: MdDescription },
+        { name: 'Result Slips', path: '/teacher/result-slips', icon: MdDescription },
         { name: 'Lesson Notes', path: '/teacher/lesson-notes', icon: MdMenuBook }
       ];
     }
@@ -142,7 +144,7 @@ const DashboardLayout = ({ children, title }) => {
   const navigationItems = getNavigationItems();
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white">
       {/* Mobile Sidebar Overlay */}
       {sidebarOpen && (
         <div

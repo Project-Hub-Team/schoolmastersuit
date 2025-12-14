@@ -29,6 +29,7 @@ import { Teachers } from './pages/admin/Teachers';
 import { Classes } from './pages/admin/Classes';
 import { Fees } from './pages/admin/Fees';
 import Reports from './pages/admin/Reports';
+import { AdminResults } from './pages/admin/Results';
 
 // Teacher Pages
 import { Attendance } from './pages/teacher/Attendance';
@@ -36,6 +37,7 @@ import { GradeEntry } from './pages/teacher/GradeEntry';
 import { LessonNotes } from './pages/teacher/LessonNotes';
 import { MyClasses } from './pages/teacher/MyClasses';
 import { AttendanceHistory } from './pages/teacher/index';
+import { StudentResultSlip } from './pages/teacher/StudentResultSlip';
 
 // Student Pages
 import MyResults from './pages/student/MyResults';
@@ -171,6 +173,14 @@ function App() {
           </ProtectedRoute>
         }
       />
+      <Route
+        path="/admin/results"
+        element={
+          <ProtectedRoute allowedRoles={[USER_ROLES.SUPER_ADMIN, USER_ROLES.ADMIN]}>
+            <AdminResults />
+          </ProtectedRoute>
+        }
+      />
 
       {/* Teacher Routes */}
       <Route
@@ -210,6 +220,14 @@ function App() {
         element={
           <ProtectedRoute allowedRoles={[USER_ROLES.TEACHER]}>
             <AttendanceHistory />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/teacher/result-slips"
+        element={
+          <ProtectedRoute allowedRoles={[USER_ROLES.TEACHER]}>
+            <StudentResultSlip />
           </ProtectedRoute>
         }
       />

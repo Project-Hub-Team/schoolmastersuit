@@ -1,5 +1,6 @@
 // Teacher pages - Full implementations
 import React, { useState, useEffect } from 'react';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import DashboardLayout from '../../components/DashboardLayout';
 import { MdCalendarToday, MdCheck, MdClose, MdDownload, MdMenuBook, MdAdd, MdSave, MdPeople, MdDescription, MdCloudUpload } from 'react-icons/md';
 import { useAuth } from '../../contexts/AuthContext';
@@ -11,11 +12,47 @@ import { AttendanceHistory as AttendanceHistoryComponent } from './AttendanceHis
 
 export const Attendance = () => {
   const { userProfile } = useAuth();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [selectedClass, setSelectedClass] = useState('');
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
   const [students, setStudents] = useState([]);
   const [attendance, setAttendance] = useState({});
   const [loading, setLoading] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editRecordKey, setEditRecordKey] = useState(null);
+
+  // Clear edit parameters when navigating away
+  useEffect(() => {
+    return () => {
+      if (isEditing) {
+        setSearchParams({});
+      }
+    };
+  }, [isEditing, setSearchParams]);
+
+  const loadExistingAttendance = async (classId, date) => {
+    try {
+      const result = await readAllRecords('attendance');
+      if (result.success) {
+        const attendanceData = result.data || {};
+        const recordKey = Object.keys(attendanceData).find(key =>
+          attendanceData[key].classId === classId &&
+          attendanceData[key].date === date &&
+          attendanceData[key].teacherId === userProfile.uid
+        );
+
+        if (recordKey) {
+          const record = attendanceData[recordKey];
+          setEditRecordKey(recordKey);
+          setAttendance(record.attendance || {});
+        }
+      }
+    } catch (error) {
+      console.error('Error loading existing attendance:', error);
+      toast.error('Failed to load existing attendance data');
+    }
+  };
 
   const loadStudents = async () => {
     if (!selectedClass) return;
@@ -34,7 +71,11 @@ export const Attendance = () => {
         classStudents.forEach(student => {
           attendanceState[student.id] = ''; // Default to empty, not present
         });
-        setAttendance(attendanceState);
+        
+        // Only set default attendance if not editing
+        if (!isEditing) {
+          setAttendance(attendanceState);
+        }
       }
     } catch (error) {
       toast.error('Failed to load students');
@@ -63,20 +104,35 @@ export const Attendance = () => {
         attendance: attendance,
         createdAt: Date.now()
       };
-      
-      await createRecord('attendance', attendanceRecord);
-      toast.success('Attendance saved successfully');
+
+      if (isEditing && editRecordKey) {
+        // Update existing record
+        await updateRecord(`attendance/${editRecordKey}`, attendanceRecord);
+        toast.success('Attendance updated successfully');
+        
+        // Clear edit state
+        setIsEditing(false);
+        setEditRecordKey(null);
+        setSearchParams({});
+        
+        // Navigate back to history page
+        navigate('/teacher/attendance-history');
+      } else {
+        // Create new record
+        await createRecord('attendance', attendanceRecord);
+        toast.success('Attendance saved successfully');
+      }
     } catch (error) {
-      toast.error('Failed to save attendance');
+      toast.error(`Failed to ${isEditing ? 'update' : 'save'} attendance`);
     }
   };
 
   return (
-    <DashboardLayout title="Attendance">
+    <DashboardLayout title={isEditing ? "Edit Attendance" : "Attendance"}>
       <div className="space-y-6">
         <div>
-          <h2 className="text-2xl font-bold text-gray-800">Mark Attendance</h2>
-          <p className="text-gray-600">Record daily student attendance</p>
+          <h2 className="text-2xl font-bold text-gray-800">{isEditing ? "Edit Attendance" : "Mark Attendance"}</h2>
+          <p className="text-gray-600">{isEditing ? "Modify existing student attendance" : "Record daily student attendance"}</p>
         </div>
 
         <div className="card">
@@ -112,10 +168,21 @@ export const Attendance = () => {
           <div className="card">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-bold">Students ({students.length})</h3>
-              <button onClick={saveAttendance} className="btn btn-primary flex items-center gap-2">
-                <MdSave size={18} />
-                Save Attendance
-              </button>
+              <div className="flex gap-2">
+                {isEditing && (
+                  <button 
+                    onClick={() => navigate('/teacher/attendance-history')} 
+                    className="btn btn-secondary flex items-center gap-2"
+                  >
+                    <MdClose size={18} />
+                    Cancel
+                  </button>
+                )}
+                <button onClick={saveAttendance} className="btn btn-primary flex items-center gap-2">
+                  <MdSave size={18} />
+                  {isEditing ? 'Update Attendance' : 'Save Attendance'}
+                </button>
+              </div>
             </div>
 
             <div className="space-y-2">

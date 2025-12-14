@@ -4,26 +4,85 @@ import DashboardLayout from '../../components/DashboardLayout';
 import { MdDownload, MdCalendarToday, MdAttachMoney, MdMenuBook, MdTrendingUp, MdEmojiEvents, MdDescription } from 'react-icons/md';
 import { useAuth } from '../../contexts/AuthContext';
 import { readAllRecords } from '../../utils/database';
-import { GRADING_SCALE, CLASSES } from '../../constants/ghanaEducation';
+import { GRADING_SCALE, CLASSES, getSubjectsByClass } from '../../constants/ghanaEducation';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import toast from 'react-hot-toast';
 
 export const MyResults = () => {
   const { userProfile } = useAuth();
   const [results, setResults] = useState([]);
-  const [selectedTerm, setSelectedTerm] = useState('term1');
   const [loading, setLoading] = useState(true);
+  const [selectedTerm, setSelectedTerm] = useState('');
+  const [selectedAcademicYear, setSelectedAcademicYear] = useState('');
+
+  // Ghanaian school terms
+  const TERMS = [
+    { id: 'term1', name: 'Term 1', label: 'First Term' },
+    { id: 'term2', name: 'Term 2', label: 'Second Term' },
+    { id: 'term3', name: 'Term 3', label: 'Third Term' }
+  ];
+
+  // Generate academic years dynamically
+  const currentYear = new Date().getFullYear();
+  const ACADEMIC_YEARS = [];
+  for (let i = -1; i <= 3; i++) {
+    const startYear = currentYear + i;
+    const endYear = startYear + 1;
+    ACADEMIC_YEARS.push({
+      id: `${startYear}-${endYear}`,
+      name: `${startYear}/${endYear}`
+    });
+  }
 
   useEffect(() => {
-    loadResults();
-  }, []);
+    loadStudentResults();
+  }, [userProfile, selectedTerm, selectedAcademicYear]);
 
-  const loadResults = async () => {
+  const loadStudentResults = async () => {
+    if (!userProfile?.id) return;
+
     try {
-      const result = await readAllRecords('grades');
-      if (result.success) {
-        // Filter results for this student
-        const studentResults = result.data.filter(r => r.studentId === userProfile.uid);
+      const gradesResult = await readAllRecords('grades');
+      if (gradesResult.success) {
+        const allGrades = Object.values(gradesResult.data || {});
+
+        // Filter grades for this student that are published (published status)
+        const studentResults = [];
+
+        allGrades.forEach(grade => {
+          if (grade.status === 'published' && grade.grades && grade.grades[userProfile.id]) {
+            // Apply filters
+            if (selectedTerm && grade.term !== selectedTerm) return;
+            if (selectedAcademicYear && grade.academicYear !== selectedAcademicYear) return;
+
+            const studentGrade = grade.grades[userProfile.id];
+            const subjectName = getSubjectsByClass(grade.classId).find(s => s.id === grade.subject)?.name || grade.subject;
+            const className = CLASSES.find(c => c.id === grade.classId)?.name || grade.classId;
+            const termName = TERMS.find(t => t.id === grade.term)?.label || grade.term;
+
+            studentResults.push({
+              id: `${grade.id}-${userProfile.id}`,
+              subject: grade.subject,
+              subjectName,
+              classId: grade.classId,
+              className,
+              term: grade.term,
+              termName,
+              academicYear: grade.academicYear,
+              ...studentGrade,
+              publishedAt: grade.reviewedAt
+            });
+          }
+        });
+
+        // Sort by academic year and term (most recent first)
+        studentResults.sort((a, b) => {
+          if (a.academicYear !== b.academicYear) {
+            return b.academicYear.localeCompare(a.academicYear);
+          }
+          return b.term.localeCompare(a.term);
+        });
+
         setResults(studentResults);
       }
     } catch (error) {
@@ -33,162 +92,171 @@ export const MyResults = () => {
     }
   };
 
-  const calculateGPA = () => {
-    if (results.length === 0) return 0;
-    const totalPoints = results.reduce((sum, result) => {
-      const gradeInfo = GRADING_SCALE.find(g => g.grade === result.grade);
-      return sum + (gradeInfo ? gradeInfo.points : 0);
-    }, 0);
-    return (totalPoints / results.length).toFixed(2);
+  const downloadResult = (result) => {
+    // This would generate and download a PDF for the individual result
+    toast.info('Individual result download coming soon');
+  };
+
+  const getGradeColor = (grade) => {
+    switch (grade) {
+      case 'A': return 'bg-green-100 text-green-800';
+      case 'B': return 'bg-blue-100 text-blue-800';
+      case 'C': return 'bg-yellow-100 text-yellow-800';
+      case 'D': return 'bg-orange-100 text-orange-800';
+      case 'E': return 'bg-red-100 text-red-800';
+      default: return 'bg-gray-100 text-gray-800';
+    }
   };
 
   if (loading) {
     return (
-      <DashboardLayout title="My Results">
-        <LoadingSpinner />
+      <DashboardLayout>
+        <div className="flex justify-center items-center h-64">
+          <LoadingSpinner />
+        </div>
       </DashboardLayout>
     );
   }
 
   return (
-    <DashboardLayout title="My Results">
+    <DashboardLayout>
       <div className="space-y-6">
-        <div className="flex justify-between items-center">
+        {/* Header */}
+        <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-2xl font-bold text-gray-800">My Academic Results</h2>
-            <p className="text-gray-600">View your examination results and performance</p>
+            <h1 className="text-3xl font-bold text-gray-800">My Results</h1>
+            <p className="text-gray-600 mt-1">View your published academic results</p>
           </div>
-          <button className="btn btn-primary flex items-center gap-2">
-            <MdDownload size={18} />
-            Download Report Card
-          </button>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-          <div className="card">
-            <p className="text-sm text-gray-600">Current Term</p>
-            <p className="text-2xl font-bold text-gray-800">Term {selectedTerm.replace('term', '')}</p>
+        {/* Filters */}
+        <div className="card">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Academic Year</label>
+              <select
+                value={selectedAcademicYear}
+                onChange={(e) => setSelectedAcademicYear(e.target.value)}
+                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+              >
+                <option value="">All Years</option>
+                {ACADEMIC_YEARS.map(year => (
+                  <option key={year.id} value={year.id}>{year.name}</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Term</label>
+              <select
+                value={selectedTerm}
+                onChange={(e) => setSelectedTerm(e.target.value)}
+                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-primary-500"
+              >
+                <option value="">All Terms</option>
+                {TERMS.map(term => (
+                  <option key={term.id} value={term.id}>{term.label}</option>
+                ))}
+              </select>
+            </div>
+            <div className="flex items-end">
+              <button
+                onClick={() => {
+                  setSelectedAcademicYear('');
+                  setSelectedTerm('');
+                }}
+                className="btn btn-secondary"
+              >
+                Clear Filters
+              </button>
+            </div>
           </div>
-          <div className="card">
-            <p className="text-sm text-gray-600">Class</p>
-            <p className="text-2xl font-bold text-gray-800">
-              {CLASSES.find(c => c.id === userProfile.class)?.name || 'N/A'}
+        </div>
+
+        {/* Results */}
+        {results.length > 0 ? (
+          <div className="grid gap-6">
+            {results.map(result => (
+              <div key={result.id} className="card hover:shadow-lg transition-shadow">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center">
+                      <MdGrade className="text-primary-600" size={24} />
+                    </div>
+                    <div>
+                      <h3 className="text-xl font-bold text-gray-800">{result.subjectName}</h3>
+                      <p className="text-gray-600">
+                        {result.className} • {result.termName} • {result.academicYear}
+                      </p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => downloadResult(result)}
+                    className="btn btn-primary flex items-center gap-2"
+                  >
+                    <MdDownload size={18} />
+                    Download
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-blue-600">{result.continuousScore?.toFixed(1) || '0.0'}</div>
+                      <div className="text-sm text-blue-800">CA Score (30%)</div>
+                    </div>
+                  </div>
+                  <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-green-600">{result.examScore || 0}</div>
+                      <div className="text-sm text-green-800">Exam Score (70%)</div>
+                    </div>
+                  </div>
+                  <div className="bg-purple-50 border border-purple-200 rounded-lg p-4">
+                    <div className="text-center">
+                      <div className="text-2xl font-bold text-purple-600">{result.score || 0}</div>
+                      <div className="text-sm text-purple-800">Final Score</div>
+                    </div>
+                  </div>
+                  <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+                    <div className="text-center">
+                      <div className={`text-2xl font-bold px-3 py-1 rounded-full inline-block ${getGradeColor(result.grade)}`}>
+                        {result.grade || 'N/A'}
+                      </div>
+                      <div className="text-sm text-gray-800 mt-1">Grade</div>
+                    </div>
+                  </div>
+                </div>
+
+                {result.remarks && (
+                  <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                    <h4 className="font-medium text-yellow-800 mb-2">Teacher Remarks</h4>
+                    <p className="text-yellow-700">{result.remarks}</p>
+                  </div>
+                )}
+
+                <div className="mt-4 text-sm text-gray-500 border-t pt-4">
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-1">
+                      <MdCalendarToday size={16} />
+                      <span>Published: {result.publishedAt ? new Date(result.publishedAt).toLocaleDateString() : 'N/A'}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="card text-center py-12">
+            <MdGrade className="mx-auto mb-4 text-gray-400" size={48} />
+            <h3 className="text-lg font-medium text-gray-900 mb-2">No results available</h3>
+            <p className="text-gray-600">
+              {selectedTerm || selectedAcademicYear
+                ? 'No results found for the selected filters. Try adjusting your search criteria.'
+                : 'Your published results will appear here once they are approved by the administration.'
+              }
             </p>
           </div>
-          <div className="card">
-            <p className="text-sm text-gray-600">GPA</p>
-            <p className="text-2xl font-bold text-primary-600">{calculateGPA()}</p>
-          </div>
-          <div className="card">
-            <p className="text-sm text-gray-600">Total Subjects</p>
-            <p className="text-2xl font-bold text-gray-800">{results.length}</p>
-          </div>
-        </div>
-
-        <div className="card">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-bold">Subject Performance</h3>
-            <select
-              value={selectedTerm}
-              onChange={(e) => setSelectedTerm(e.target.value)}
-              className="input w-auto"
-            >
-              <option value="term1">Term 1</option>
-              <option value="term2">Term 2</option>
-              <option value="term3">Term 3</option>
-            </select>
-          </div>
-
-          {results.length === 0 ? (
-            <div className="text-center py-12">
-              <MdEmojiEvents className="mx-auto mb-3 text-gray-400" size={48} />
-              <p className="text-lg font-medium text-gray-700">No results available</p>
-              <p className="text-sm text-gray-500">Your results will appear here once published</p>
-            </div>
-          ) : (
-            <div className="overflow-x-auto">
-              <table className="min-w-full">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Subject</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Class Score (40%)</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Exam (60%)</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Total (100%)</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Grade</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Remark</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  {results.map(result => {
-                    const gradeInfo = GRADING_SCALE.find(g => g.grade === result.grade);
-                    return (
-                      <tr key={result.id}>
-                        <td className="px-4 py-3 font-medium">{result.subject}</td>
-                        <td className="px-4 py-3">{result.classScore || 0}</td>
-                        <td className="px-4 py-3">{result.examScore || 0}</td>
-                        <td className="px-4 py-3 font-bold">{result.totalScore || 0}</td>
-                        <td className="px-4 py-3">
-                          <span className={`px-3 py-1 rounded-full text-sm font-medium ${
-                            gradeInfo?.grade.startsWith('A') || gradeInfo?.grade.startsWith('B')
-                              ? 'bg-green-100 text-green-800'
-                              : gradeInfo?.grade.startsWith('C') || gradeInfo?.grade.startsWith('D')
-                              ? 'bg-yellow-100 text-yellow-800'
-                              : 'bg-red-100 text-red-800'
-                          }`}>
-                            {result.grade}
-                          </span>
-                        </td>
-                        <td className="px-4 py-3 text-sm">{gradeInfo?.interpretation}</td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div className="card bg-green-50">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-                <MdTrendingUp className="text-green-600" size={24} />
-              </div>
-              <div>
-                <p className="text-sm text-green-700">Excellent</p>
-                <p className="text-2xl font-bold text-green-600">
-                  {results.filter(r => r.grade?.startsWith('A') || r.grade?.startsWith('B')).length}
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="card bg-yellow-50">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
-                <MdEmojiEvents className="text-yellow-600" size={24} />
-              </div>
-              <div>
-                <p className="text-sm text-yellow-700">Average</p>
-                <p className="text-2xl font-bold text-yellow-600">
-                  {results.filter(r => r.grade?.startsWith('C') || r.grade?.startsWith('D')).length}
-                </p>
-              </div>
-            </div>
-          </div>
-          <div className="card bg-red-50">
-            <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center">
-                <MdDescription className="text-red-600" size={24} />
-              </div>
-              <div>
-                <p className="text-sm text-red-700">Need Improvement</p>
-                <p className="text-2xl font-bold text-red-600">
-                  {results.filter(r => r.grade?.startsWith('E') || r.grade?.startsWith('F')).length}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+        )}
       </div>
     </DashboardLayout>
   );
